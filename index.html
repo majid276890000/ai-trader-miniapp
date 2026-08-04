@@ -8,8 +8,29 @@
 </head>
 
 <body>
-<h1>AI Trader Mini App</h1>
-<p>نسخه اولیه مینی اپ با موفقیت ساخته شد.</p>
+<div class="app">
+<h1>🤖 AI Trader</h1>
+
+<div class="card">
+<h2>وضعیت ربات</h2>
+<p id="status">متوقف</p>
+</div>
+
+<div class="card">
+<h2>موجودی آزمایشی</h2>
+<p>1000 USDT</p>
+</div>
+
+<button onclick="startBot()">شروع معامله‌گر</button>
+<button onclick="stopBot()">توقف ربات</button>
+
+<div class="card">
+<h2>آخرین تحلیل</h2>
+<p id="signal">در انتظار تحلیل هوش مصنوعی...</p>
+</div>
+
+</div>
+
 
 <script src="app.js"></script>
 </body>

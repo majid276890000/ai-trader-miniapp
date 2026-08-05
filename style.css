@@ -1,16 +1,46 @@
-body {
+ body {
   margin: 0;
+  padding: 20px;
   font-family: Arial, sans-serif;
-  background: #0f172a;
+  background: #0d1117;
   color: white;
-  text-align: center;
+}
+
+.app {
+  max-width: 500px;
+  margin: auto;
 }
 
 h1 {
-  color: #22c55e;
-  margin-top: 40px;
+  text-align: center;
+  color: #00e676;
 }
 
-p {
-  color: #cbd5e1;
+.card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.card h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #00c853;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00e676;
 }

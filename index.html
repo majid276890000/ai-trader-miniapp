@@ -3,35 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Trader Mini App</title>
+<title>AI Trader</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
 <div class="app">
+
 <h1>🤖 AI Trader</h1>
+<p class="subtitle">معامله‌گر هوشمند</p>
 
 <div class="card">
 <h2>وضعیت ربات</h2>
-<p id="status">متوقف</p>
+<p id="status">در حال بررسی...</p>
 </div>
 
 <div class="card">
-<h2>موجودی آزمایشی</h2>
-<p id="balance">💰 موجودی: 1000 USDT</p>
+<h2>💰 موجودی</h2>
+<p id="balance">1000 USDT</p>
 </div>
-
-<button onclick="startBot()">شروع معامله‌گر</button>
-<button onclick="stopBot()">توقف ربات</button>
 
 <div class="card">
-<h2>آخرین تحلیل</h2>
-<p id="signal">در انتظار تحلیل هوش مصنوعی...</p>
+<h2>📈 عملکرد</h2>
+<p id="profit">سود و زیان: 0%</p>
 </div>
 
+<div class="card">
+<h2>🧠 آخرین تحلیل AI</h2>
+<p id="signal">در انتظار تحلیل...</p>
 </div>
 
+<button onclick="startBot()">🟢 شروع معامله‌گر</button>
+<button onclick="stopBot()">🔴 توقف ربات</button>
+
+</div>
 
 <script src="app.js"></script>
+
 </body>
 </html>

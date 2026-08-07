@@ -22,3 +22,4 @@ async function getStatus() {
   document.getElementById("balance").innerText =
     "💰 موجودی: " + data.balance;
 }
+getStatus();

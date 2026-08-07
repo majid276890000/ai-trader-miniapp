@@ -33,7 +33,20 @@
 <h2>🧠 آخرین تحلیل AI</h2>
 <p id="signal">در انتظار تحلیل...</p>
 </div>
+<div class="card">
+<h2>⚙️ تنظیمات ربات</h2>
 
+<label>حالت معامله:</label>
+<select id="mode">
+<option>کم ریسک</option>
+<option>متوسط</option>
+<option>پر ریسک</option>
+</select>
+
+<label>سرمایه آزمایشی:</label>
+<input id="capital" type="number" value="1000">
+
+</div>
 <button onclick="startBot()">🟢 شروع معامله‌گر</button>
 <button onclick="stopBot()">🔴 توقف ربات</button>
 

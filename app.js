@@ -1,5 +1,4 @@
-const API = "http://localhost:3000";
-
+const API = "https://ai-trader-backend-xfyg.onrender.com
 async function startBot() {
   try {
     const res = await fetch(API + "/start");

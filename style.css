@@ -1,74 +1,321 @@
-body {
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: Tahoma, sans-serif;
-  background: #0b1220;
-  color: white;
+}
+
+body {
+  background:
+    radial-gradient(circle at top right, rgba(0, 255, 153, 0.12), transparent 35%),
+    radial-gradient(circle at bottom left, rgba(0, 180, 255, 0.10), transparent 35%),
+    #05080d;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
   direction: rtl;
 }
 
 .app {
-  max-width: 420px;
+  width: 100%;
+  max-width: 480px;
   margin: auto;
-  padding: 20px;
+  padding: 18px 14px 95px;
 }
 
-h1 {
-  text-align: center;
+/* Header */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.brand {
   color: #00ff99;
-  font-size: 32px;
+  font-size: 27px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px rgba(0, 255, 153, 0.7);
 }
 
-.card {
-  background: #151f35;
+.subtitle {
+  color: #8a96a8;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.connection {
+  color: #00ff99;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ff99;
+  box-shadow: 0 0 10px #00ff99;
+}
+
+/* Cards */
+
+.balance-card,
+.status-card,
+.analysis-card,
+.settings-card {
+  background: rgba(12, 18, 27, 0.88);
+  border: 1px solid rgba(0, 255, 153, 0.20);
   border-radius: 18px;
   padding: 18px;
-  margin: 15px 0;
-  box-shadow: 0 0 15px rgba(0,255,153,0.15);
+  margin-bottom: 15px;
+  box-shadow:
+    0 0 25px rgba(0, 0, 0, 0.35),
+    inset 0 0 20px rgba(0, 255, 153, 0.025);
 }
 
-.card h2 {
-  color: #00d9ff;
-  font-size: 20px;
+.balance-card {
+  border-color: rgba(0, 180, 255, 0.35);
 }
 
-p {
-  font-size: 18px;
+.card-label {
+  color: #8995a6;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.balance {
+  color: #ffffff;
+  font-size: 27px;
+  font-weight: bold;
+  text-shadow: 0 0 12px rgba(0, 180, 255, 0.45);
+}
+
+.profit {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8a96a8;
+  font-size: 13px;
+}
+
+.profit strong {
+  color: #00ff99;
+}
+
+/* Section */
+
+.section-title {
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Bot */
+
+.bot-status {
+  color: #ffb000;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.signal {
+  color: #8995a6;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* Buttons */
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 button {
-  width: 100%;
-  padding: 15px;
-  margin: 8px 0;
   border: none;
-  border-radius: 14px;
-  font-size: 18px;
   cursor: pointer;
-  background: #00ff99;
-  color: #001;
+  font-family: inherit;
 }
 
-button:last-of-type {
-  background: #ff4057;
-  color: white;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-select, input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+.start-btn,
+.stop-btn,
+.save-btn {
+  padding: 13px 10px;
   border-radius: 12px;
-  border: none;
-  background: #0b1220;
-  color: white;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
-label {
+.start-btn {
+  background: #00ff99;
+  color: #03100b;
+  box-shadow: 0 0 18px rgba(0, 255, 153, 0.35);
+}
+
+.stop-btn {
+  background: #ff3b4f;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 59, 79, 0.20);
+}
+
+.start-btn:active,
+.stop-btn:active,
+.save-btn:active {
+  transform: scale(0.97);
+}
+
+/* AI Analysis */
+
+.analysis-card {
+  border-color: rgba(0, 180, 255, 0.28);
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.analysis-item {
+  background: rgba(255, 255, 255, 0.035);
+  border-radius: 12px;
+  padding: 13px;
+}
+
+.analysis-item span {
   display: block;
-  margin-top: 12px;
+  color: #7f8b9d;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+
+.analysis-item strong {
   color: #00d9ff;
+  font-size: 14px;
+}
+
+/* Settings */
+
+.settings-card label {
+  display: block;
+  color: #8a96a8;
+  font-size: 12px;
+  margin: 12px 0 7px;
+}
+
+.settings-card select,
+.settings-card input {
+  width: 100%;
+  background: #080d14;
+  border: 1px solid rgba(0, 255, 153, 0.18);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 12px;
+  outline: none;
+}
+
+.save-btn {
+  width: 100%;
+  margin-top: 15px;
+  background: #00d9ff;
+  color: #031018;
+  box-shadow: 0 0 18px rgba(0, 217, 255, 0.25);
+}
+
+/* Bottom Navigation */
+
+.bottom-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  width: calc(100% - 20px);
+  max-width: 460px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: rgba(8, 13, 20, 0.96);
+  border: 1px solid rgba(0, 255, 153, 0.18);
+  border-radius: 18px;
+  padding: 8px 5px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.55);
+}
+
+.nav-item {
+  background: transparent;
+  color: #687588;
+  padding: 7px 2px;
+  font-size: 18px;
+}
+
+.nav-item span {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+}
+
+.nav-item.active {
+  color: #00ff99;
+  text-shadow: 0 0 10px rgba(0, 255, 153, 0.6);
+}
+
+/* Mobile */
+
+@media (max-width: 360px) {
+  .brand {
+    font-size: 23px;
+  }
+
+  .balance {
+    font-size: 23px;
+  }
+
+  .start-btn,
+  .stop-btn {
+    font-size: 12px;
+  }
+}
+/* Final mobile spacing */
+
+.app {
+  padding-bottom: 115px;
+}
+
+.bottom-nav {
+  bottom: 12px;
+  padding: 6px 4px;
+}
+
+.nav-item {
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.nav-item span {
+  line-height: 1.2;
+}
+
+@media (max-width: 360px) {
+  .app {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 110px;
+  }
+
+  .bottom-nav {
+    width: calc(100% - 14px);
+  }
 }

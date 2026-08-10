@@ -40,8 +40,13 @@ async function getStatus() {
     const res = await fetch(API + "/status");
     const data = await res.json();
 
-    document.getElementById("status").innerText =
-      data.bot === "active" ? "🟢 فعال" : "🔴 متوقف";
+    const statusElement = document.getElementById("status");
+
+statusElement.innerText =
+  data.bot === "active" ? "🟢 فعال" : "🔴 متوقف";
+
+statusElement.classList.toggle("active", data.bot === "active");
+statusElement.classList.toggle("stopped", data.bot !== "active");
 
     document.getElementById("balance").innerText =
       "💰 " + data.balance + " USDT";

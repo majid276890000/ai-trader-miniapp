@@ -218,6 +218,8 @@ async function updatePaperTrading() {
     console.error("Paper Trading Error:", error);
   }
 }
+    updatePaperTrading();
+setInterval(updatePaperTrading, 5000);
     const currentPrice = Number(priceData.price) || 0;
     const entryPrice = Number(data.entryPrice) || 0;
     const btcPosition = Number(data.position) || 0;

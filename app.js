@@ -1,4 +1,4 @@
-const API = "https://ai-trader-backend-xfyg.onrender.com";
+const API = ;"https://ai-trader-backend-xfyg.onrender.com";
 async function startBot() {
   try {
     const res = await fetch(API + "/start");

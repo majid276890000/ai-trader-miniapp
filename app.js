@@ -1,7 +1,7 @@
 const API = "https://ai-trader-backend-xfyg.onrender.com";
 async function startBot() {
   try {
-    const res = await fetch(API + "/paper-status");
+    const res = await fetch(API + "/start");
     const data = await res.json();
 
     document.getElementById("status").innerText = "🟢 فعال";

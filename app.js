@@ -204,7 +204,20 @@ async function getPaperStatus() {
     const position = document.getElementById("paperPosition");
     const entry = document.getElementById("paperEntryPrice");
     const profit = document.getElementById("paperProfit");
+async function updatePaperTrading() {
+  try {
+    const res = await fetch(API + "/paper/status");
+    const data = await res.json();
 
+    status.innerText = data.status || "متوقف";
+    position.innerText = data.position || "بدون پوزیشن";
+    entry.innerText = data.entryPrice || "-";
+    profit.innerText = data.profit || "0 USDT";
+
+  } catch (error) {
+    console.error("Paper Trading Error:", error);
+  }
+}
     const currentPrice = Number(priceData.price) || 0;
     const entryPrice = Number(data.entryPrice) || 0;
     const btcPosition = Number(data.position) || 0;

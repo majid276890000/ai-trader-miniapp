@@ -125,7 +125,15 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
 }
+.bot-status.active {
+  color: #00ff99;
+  text-shadow: 0 0 12px rgba(0, 255, 153, 0.7);
+}
 
+.bot-status.stopped {
+  color: #ff3b4f;
+  text-shadow: 0 0 12px rgba(255, 59, 79, 0.5);
+}
 .signal {
   color: #8995a6;
   font-size: 13px;

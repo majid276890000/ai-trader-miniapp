@@ -273,3 +273,46 @@ function showMarket() {
     });
   }
 }
+async function paperBuy() {
+  try {
+    const res = await fetch(API + "/paper-buy");
+    const data = await res.json();
+
+    if (data.ok) {
+      document.getElementById("signal").innerText =
+        "🟢 خرید آزمایشی انجام شد";
+
+      await getStatus();
+      await getPaperStatus();
+    } else {
+      document.getElementById("signal").innerText =
+        "⚠️ " + (data.message || "خرید انجام نشد");
+    }
+
+  } catch (error) {
+    document.getElementById("signal").innerText =
+      "❌ خطا در خرید آزمایشی";
+  }
+}
+
+async function paperSell() {
+  try {
+    const res = await fetch(API + "/paper-sell");
+    const data = await res.json();
+
+    if (data.ok) {
+      document.getElementById("signal").innerText =
+        "🔴 فروش آزمایشی انجام شد";
+
+      await getStatus();
+      await getPaperStatus();
+    } else {
+      document.getElementById("signal").innerText =
+        "⚠️ " + (data.message || "فروش انجام نشد");
+    }
+
+  } catch (error) {
+    document.getElementById("signal").innerText =
+      "❌ خطا در فروش آزمایشی";
+  }
+}

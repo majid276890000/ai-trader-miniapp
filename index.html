@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>AI Trader</title>
-  <link rel="stylesheet" href="style.css?v=1">
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 </head>
 
 <body>
@@ -13,192 +23,214 @@
 
     <!-- Header -->
     <header class="header">
+
       <div>
-        <div class="brand">AI TRADER</div>
-        <div class="subtitle">معامله‌گر هوشمند</div>
+        <h1>🤖 AI Trader</h1>
+        <div class="subtitle">
+          معامله‌گر هوشمند
+        </div>
       </div>
 
       <div class="connection">
         <span class="dot"></span>
         آنلاین
       </div>
+
     </header>
 
-    <!-- Balance -->
-    <section class="balance-card">
-      <div class="card-label">موجودی حساب</div>
-      <div id="balance" class="balance">💰 1000 USDT</div>
-
-      <div class="analysis-item">
-  <span>بازار</span>
-  <strong>BTC / USDT</strong>
-  <small id="btc-price">در حال دریافت قیمت...</small>
-</div>    </section>
 
     <!-- Bot Status -->
-    <section class="status-card">
+    <section class="card">
 
-      <div class="section-title">
-        وضعیت معامله‌گر
-      </div>
+      <h2>وضعیت ربات</h2>
 
-      <div id="status" class="bot-status">
-        🔴 متوقف
-      </div>
+      <p id="status">
+        در حال بررسی...
+      </p>
 
-      <div id="signal" class="signal">
-        ربات آماده شروع است
-      </div>
+      <p id="signal">
+        -
+      </p>
 
       <div class="buttons">
-        <button class="start-btn" onclick="startBot()">
-          ▶ شروع معامله‌گر
+
+        <button
+          onclick="startBot()"
+        >
+          🚀 شروع ربات
         </button>
 
-        <button class="stop-btn" onclick="stopBot()">
-          ■ توقف ربات
+        <button
+          onclick="stopBot()"
+        >
+          🛑 توقف ربات
         </button>
+
       </div>
 
     </section>
 
-    <!-- AI Analysis -->
-    <section class="analysis-card">
 
-      <div class="section-title">
-        🤖 تحلیل هوش مصنوعی
-      </div>
+    <!-- Market -->
+    <section class="card">
 
-      <div class="analysis-grid">
+      <h2>📊 بازار</h2>
 
-        <div class="analysis-item">
-          <span>بازار</span>
-          <strong>BTC / USDT</strong>
-        </div>
+      <p>
+        BTC/USDT
+      </p>
 
-        <div class="analysis-item">
-          <span>سیگنال</span>
-          <strong id="aiSignal">در انتظار</strong>
-        </div>
+      <p>
+        قیمت:
+        <strong id="btcPrice">
+          -
+        </strong>
+      </p>
 
-        <div class="analysis-item">
-          <span>ریسک</span>
-          <strong id="riskLevel">کم</strong>
-        </div>
+      <p>
+        روند:
+        <strong id="trend">
+          -
+        </strong>
+      </p>
 
-<div class="analysis-item">
-  <span>روند بازار</span>
-  <strong id="marketTrend">--</strong>
-</div>
-        <div class="analysis-item">
-          <span>اعتماد AI</span>
-          <strong id="confidence">--%</strong>
-        </div>
+      <p>
+        اعتماد:
+        <strong id="confidence">
+          -
+        </strong>
+      </p>
 
-      </div>
+      <p>
+        ریسک:
+        <strong id="risk">
+          -
+        </strong>
+      </p>
 
     </section>
+
 
     <!-- Paper Trading -->
-    <section class="paper-card">
+    <section class="card">
 
-      <div class="section-title">
-        🧪 معامله آزمایشی
+      <h2>📈 معامله آزمایشی</h2>
+
+      <p>
+        وضعیت:
+        <strong id="paperStatus">
+          -
+        </strong>
+      </p>
+
+      <p>
+        مقدار BTC:
+        <strong id="paperPosition">
+          0 BTC
+        </strong>
+      </p>
+
+      <p>
+        قیمت ورود:
+        <strong id="paperEntryPrice">
+          0 USDT
+        </strong>
+      </p>
+
+      <p>
+        سود / زیان:
+        <strong id="paperProfit">
+          0 USDT
+        </strong>
+      </p>
+
+      <div class="buttons">
+
+        <button
+          onclick="paperBuy()"
+        >
+          🟢 خرید آزمایشی
+        </button>
+
+        <button
+          onclick="paperSell()"
+        >
+          🔴 فروش آزمایشی
+        </button>
+
       </div>
 
-      <div class="analysis-grid">
-
-        <div class="analysis-item">
-          <span>وضعیت معامله</span>
-          <strong id="paperStatus">بدون معامله</strong>
-        </div>
-
-        <div class="analysis-item">
-          <span>مقدار BTC</span>
-          <strong id="paperPosition">0 BTC</strong>
-        </div>
-
-        <div class="analysis-item">
-          <span>قیمت ورود</span>
-          <strong id="paperEntryPrice">0 USDT</strong>
-        </div>
-
-        <div class="analysis-item">
-          <span>سود / زیان</span>
-          <strong id="paperProfit">0 USDT</strong>
-        </div>
-
-      </div>
-      <div class="paper-buttons">
-        <button onclick="paperBuy()">🟢 خرید آزمایشی</button>
-        <button onclick="paperSell()">🔴 فروش آزمایشی</button>
-      </div>
     </section>
 
-    <!-- Settings -->
-    <section class="settings-card">
 
-      <div class="section-title">
-        ⚙️ تنظیمات معامله
-      </div>
+    <!-- Wallet -->
+    <section class="card wallet-card">
 
-      <label for="risk">سطح ریسک</label>
+      <h2>💰 کیف پول</h2>
 
-      <select id="risk">
-        <option value="low-risk">کم‌ریسک</option>
-        <option value="medium-risk">متوسط</option>
-        <option value="high-risk">پرریسک</option>
-      </select>
+      <p>
+        موجودی کیف پول:
+      </p>
 
-      <label for="capital">سرمایه معامله</label>
-
-      <input
-        id="capital"
-        type="number"
-        value="1000"
-        min="10"
-        step="10"
+      <div
+        id="walletBalance"
+        class="wallet-balance"
       >
+        0 USDT
+      </div>
 
-      <button class="save-btn" onclick="saveSettings()">
-        💾 ذخیره تنظیمات
-      </button>
+
+      <div class="buttons">
+
+        <button
+          onclick="walletDeposit()"
+        >
+          ➕ واریز تستی
+        </button>
+
+        <button
+          onclick="walletWithdraw()"
+        >
+          ➖ برداشت تستی
+        </button>
+
+      </div>
+
+
+      <h3>
+        🧾 تاریخچه تراکنش‌ها
+      </h3>
+
+      <div
+        id="walletTransactions"
+        class="wallet-transactions"
+      >
+        <p>
+          در حال دریافت...
+        </p>
+      </div>
 
     </section>
 
-    <!-- Navigation -->
-    <nav class="bottom-nav">
 
-      <button class="nav-item active">
-        🏠
-        <span>خانه</span>
-      </button>
+    <!-- Footer -->
+    <footer>
 
-      <button class="nav-item" onclick="showMarket()">
-        📊
-        <span>بازار</span>
-      </button>
+      <p>
+        AI Trader Mini App
+      </p>
 
-      <button class="nav-item">
-        🤖
-        <span>معامله‌گر</span>
-      </button>
+      <small>
+        Paper Trading Mode
+      </small>
 
-      <button class="nav-item">
-        📜
-        <span>تاریخچه</span>
-      </button>
-
-      <button class="nav-item">
-        ⚙️
-        <span>تنظیمات</span>
-      </button>
-
-    </nav>
+    </footer>
 
   </div>
 
-  <script src="app.js?v=2"></script>
+
+  <script src="app.js"></script>
 
 </body>
+
 </html>

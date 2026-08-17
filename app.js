@@ -1,303 +1,633 @@
-const API = "https://ai-trader-backend-xfyg.onrender.com";
-async function startBot() {
-  try {
-    const res = await fetch(API + "/start");
-    const data = await res.json();
+const API = "https://ai-trader-backend-1-n7yv.onrender.com";
 
-    document.getElementById("status").innerText = "🟢 فعال";
+// =========================
+// Helper
+// =========================
+function setText(id, value) {
+  const el = document.getElementById(id);
 
-    document.getElementById("signal").innerText =
-      data.message || "ربات شروع شد";
-
-    await getStatus();
-
-  } catch (error) {
-    document.getElementById("signal").innerText =
-      "❌ اتصال به Backend برقرار نیست";
+  if (el) {
+    el.innerText = value;
   }
 }
 
-async function stopBot() {
-  try {
-    const res = await fetch(API + "/stop");
-    const data = await res.json();
-
-    document.getElementById("status").innerText = "🔴 متوقف";
-
-    document.getElementById("signal").innerText =
-      data.message || "ربات متوقف شد";
-
-    await getStatus();
-
-  } catch (error) {
-    document.getElementById("signal").innerText =
-      "❌ اتصال به Backend برقرار نیست";
-  }
-}
-
+// =========================
+// Bot Status
+// =========================
 async function getStatus() {
   try {
     const res = await fetch(API + "/status");
     const data = await res.json();
 
-    const statusElement = document.getElementById("status");
+    setText(
+      "status",
+      data.bot === "active"
+        ? "🟢 فعال"
+        : "⚪ متوقف"
+    );
 
-statusElement.innerText =
-  data.bot === "active" ? "🟢 فعال" : "🔴 متوقف";
+    setText(
+      "balance",
+      Number(data.balance ?? 0).toFixed(2) +
+      " USDT"
+    );
 
-statusElement.classList.toggle("active", data.bot === "active");
-statusElement.classList.toggle("stopped", data.bot !== "active");
-
-    document.getElementById("balance").innerText =
-      "💰 " + data.balance + " USDT";
-
-    if (data.settings) {
-      const risk = document.getElementById("risk");
-      const capital = document.getElementById("capital");
-
-      if (risk) {
-        risk.value = data.settings.mode || "low-risk";
-      }
-
-      if (capital) {
-        capital.value =
-          data.settings.capital || data.balance;
-      }
-    }
+    setText(
+      "signal",
+      data.bot === "active"
+        ? "معامله‌گر فعال است"
+        : "معامله‌گر متوقف است"
+    );
 
   } catch (error) {
-    document.getElementById("status").innerText =
-      "⚠️ اتصال برقرار نیست";
 
-    document.getElementById("signal").innerText =
-      "Backend در دسترس نیست";
+    setText(
+      "status",
+      "🔴 اتصال برقرار نیست"
+    );
+
+    setText(
+      "signal",
+      "Backend در دسترس نیست"
+    );
+
+    console.error(
+      "Status Error:",
+      error
+    );
   }
 }
 
-async function getAnalysis() {
+// =========================
+// Start Bot
+// =========================
+async function startBot() {
   try {
-    const res = await fetch(API + "/analysis");
-    const data = await res.json();
 
-    if (data.error) {
-      throw new Error(data.error);
-    }
+    const res =
+      await fetch(API + "/start");
 
-    const signal =
-      document.getElementById("aiSignal");
+    const data =
+      await res.json();
 
-    const risk =
-      document.getElementById("riskLevel");
+    setText(
+      "status",
+      "🟢 فعال"
+    );
 
-    const confidence =
-      document.getElementById("confidence");
+    setText(
+      "signal",
+      data.message ||
+      "ربات شروع شد"
+    );
 
-const marketTrend =
-  document.getElementById("marketTrend");
-
-    if (signal) {
-      if (data.signal === "CHECK_BUY") {
-        signal.innerText = "🟢 بررسی خرید";
-      } else {
-        signal.innerText = "🟡 انتظار";
-      }
-    }
-
-    if (risk) {
-      risk.innerText =
-        data.risk === "LOW" ? "کم" : data.risk;
-    }
-
-    if (confidence) {
-      confidence.innerText =
-        data.confidence + "%";
-    }
-
-if (marketTrend) {
-  if (data.trend === "UP") {
-    marketTrend.innerText = "📈 صعودی";
-  } else if (data.trend === "DOWN") {
-    marketTrend.innerText = "📉 نزولی";
-  } else {
-    marketTrend.innerText = "➖ خنثی";
-  }
-}
+    await getStatus();
 
   } catch (error) {
 
-    const signal =
-      document.getElementById("aiSignal");
+    setText(
+      "signal",
+      "❌ اتصال به Backend برقرار نیست"
+    );
 
-    if (signal) {
-      signal.innerText =
-        "در انتظار تحلیل";
-    }
+    console.error(
+      "Start Error:",
+      error
+    );
   }
 }
 
+// =========================
+// Stop Bot
+// =========================
+async function stopBot() {
+  try {
+
+    const res =
+      await fetch(API + "/stop");
+
+    const data =
+      await res.json();
+
+    setText(
+      "status",
+      "⚪ متوقف"
+    );
+
+    setText(
+      "signal",
+      data.message ||
+      "ربات متوقف شد"
+    );
+
+    await getStatus();
+
+  } catch (error) {
+
+    setText(
+      "signal",
+      "❌ اتصال به Backend برقرار نیست"
+    );
+
+    console.error(
+      "Stop Error:",
+      error
+    );
+  }
+}
+
+// =========================
+// BTC Price
+// =========================
 async function getBTCPrice() {
   try {
-    const res = await fetch(API + "/price");
-    const data = await res.json();
 
-    if (!data.price) {
+    const res =
+      await fetch(API + "/price");
+
+    const data =
+      await res.json();
+
+    if (data.price) {
+
+      setText(
+        "btcPrice",
+        Number(data.price)
+          .toFixed(2) +
+        " USDT"
+      );
+    }
+
+  } catch (error) {
+
+    console.error(
+      "BTC Price Error:",
+      error
+    );
+  }
+}
+
+// =========================
+// Market Analysis
+// =========================
+async function getAnalysis() {
+  try {
+
+    const res =
+      await fetch(API + "/analysis");
+
+    const data =
+      await res.json();
+
+    if (data.error) {
+      throw new Error(
+        data.error
+      );
+    }
+
+    setText(
+      "signal",
+      data.signal || "WAIT"
+    );
+
+    setText(
+      "trend",
+      data.trend || "NEUTRAL"
+    );
+
+    setText(
+      "confidence",
+      data.confidence != null
+        ? data.confidence + "%"
+        : "-"
+    );
+
+    setText(
+      "risk",
+      data.risk || "LOW"
+    );
+
+    if (data.price) {
+
+      setText(
+        "btcPrice",
+        Number(data.price)
+          .toFixed(2) +
+        " USDT"
+      );
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Analysis Error:",
+      error
+    );
+  }
+}
+
+// =========================
+// Paper Trading
+// =========================
+async function getPaperStatus() {
+
+  try {
+
+    const res =
+      await fetch(
+        API + "/paper-status"
+      );
+
+    const data =
+      await res.json();
+
+    const position =
+      Number(data.position) || 0;
+
+    const entry =
+      Number(data.entryPrice) || 0;
+
+    const profit =
+      Number(data.profit) || 0;
+
+    setText(
+      "paperPosition",
+      position > 0
+        ? position.toFixed(8) +
+          " BTC"
+        : "0 BTC"
+    );
+
+    setText(
+      "paperEntryPrice",
+      entry > 0
+        ? entry.toFixed(2) +
+          " USDT"
+        : "0 USDT"
+    );
+
+    setText(
+      "paperProfit",
+      profit.toFixed(2) +
+      " USDT"
+    );
+
+    setText(
+      "paperStatus",
+      position > 0
+        ? "🟢 معامله باز"
+        : "⚪ بدون معامله"
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Paper Status Error:",
+      error
+    );
+  }
+}
+
+// =========================
+// Paper Buy
+// =========================
+async function paperBuy() {
+
+  try {
+
+    const res =
+      await fetch(
+        API + "/paper-buy"
+      );
+
+    const data =
+      await res.json();
+
+    if (!data.ok) {
+
+      alert(
+        data.message ||
+        "خرید انجام نشد"
+      );
+
       return;
     }
 
-    const priceElement =
-      document.getElementById("btc-price");
-
-    if (priceElement) {
-      priceElement.innerText =
-        Number(data.price).toLocaleString("en-US") +
-        " USDT";
-    }
+    await getPaperStatus();
+    await getStatus();
 
   } catch (error) {
 
-    const priceElement =
-      document.getElementById("btc-price");
+    console.error(
+      "Paper Buy Error:",
+      error
+    );
 
-    if (priceElement) {
-      priceElement.innerText =
-        "قیمت در دسترس نیست";
-    }
+    alert(
+      "خطا در خرید آزمایشی"
+    );
   }
 }
 
-async function saveSettings() {
-
-  const risk =
-    document.getElementById("risk");
-
-  const capital =
-    document.getElementById("capital");
-
-  const mode =
-    risk ? risk.value : "low-risk";
-
-  const capitalValue =
-    capital ? Number(capital.value) : 1000;
-
-  document.getElementById("signal").innerText =
-    "تنظیمات آماده ارسال است";
-
-  console.log("Settings:", {
-    mode: mode,
-    capital: capitalValue
-  });
-}
-
-getStatus();
-getBTCPrice();
-async function getPaperStatus() {
-  try {
-    const [paperRes, priceRes] = await Promise.all([
-      fetch(API + "/paper-status"),
-      fetch(API + "/price")
-    ]);
-
-    const data = await paperRes.json();
-    const priceData = await priceRes.json();
-
-    const status = document.getElementById("paperStatus");
-    const position = document.getElementById("paperPosition");
-    const entry = document.getElementById("paperEntryPrice");
-    const profit = document.getElementById("paperProfit");
-
-    const currentPrice = Number(priceData.price) || 0;
-    const entryPrice = Number(data.entryPrice) || 0;
-    const btcPosition = Number(data.position) || 0;
-
-    if (btcPosition > 0 && entryPrice > 0) {
-      if (status) status.innerText = "🟢 معامله باز";
-
-      if (position) {
-        position.innerText =
-          btcPosition.toFixed(8) + " BTC";
-      }
-
-      if (entry) {
-        entry.innerText =
-          entryPrice.toFixed(2) + " USDT";
-      }
-
-      if (profit && currentPrice > 0) {
-        const currentProfit =
-          (currentPrice - entryPrice) * btcPosition;
-
-        profit.innerText =
-          currentProfit.toFixed(2) + " USDT";
-      }
-
-    } else {
-      if (status) status.innerText = "⚪ بدون معامله";
-      if (position) position.innerText = "0 BTC";
-      if (entry) entry.innerText = "0 USDT";
-      if (profit) profit.innerText = "0 USDT";
-    }
-
-  } catch (error) {
-    console.log("Paper status error:", error.message);
-  }
-}
-
-getAnalysis();
-getPaperStatus();
-
-setInterval(getBTCPrice, 15000);
-setInterval(getAnalysis, 15000);
-setInterval(getPaperStatus, 15000);
-function showMarket() {
-  const market = document.getElementById("marketTrend");
-
-  if (market) {
-    market.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-  }
-}
-async function paperBuy() {
-  try {
-    const res = await fetch(API + "/paper-buy");
-    const data = await res.json();
-
-    if (data.ok) {
-      document.getElementById("signal").innerText =
-        "🟢 خرید آزمایشی انجام شد";
-
-      await getStatus();
-      await getPaperStatus();
-    } else {
-      document.getElementById("signal").innerText =
-        "⚠️ " + (data.message || "خرید انجام نشد");
-    }
-
-  } catch (error) {
-    document.getElementById("signal").innerText =
-      "❌ خطا در خرید آزمایشی";
-  }
-}
-
+// =========================
+// Paper Sell
+// =========================
 async function paperSell() {
+
   try {
-    const res = await fetch(API + "/paper-sell");
-    const data = await res.json();
 
-    if (data.ok) {
-      document.getElementById("signal").innerText =
-        "🔴 فروش آزمایشی انجام شد";
+    const res =
+      await fetch(
+        API + "/paper-sell"
+      );
 
-      await getStatus();
-      await getPaperStatus();
-    } else {
-      document.getElementById("signal").innerText =
-        "⚠️ " + (data.message || "فروش انجام نشد");
+    const data =
+      await res.json();
+
+    if (!data.ok) {
+
+      alert(
+        data.message ||
+        "فروش انجام نشد"
+      );
+
+      return;
     }
 
+    await getPaperStatus();
+    await getStatus();
+
   } catch (error) {
-    document.getElementById("signal").innerText =
-      "❌ خطا در فروش آزمایشی";
+
+    console.error(
+      "Paper Sell Error:",
+      error
+    );
+
+    alert(
+      "خطا در فروش آزمایشی"
+    );
   }
 }
+
+// =========================
+// Wallet Status
+// =========================
+async function getWalletStatus() {
+
+  try {
+
+    const res =
+      await fetch(
+        API + "/wallet-status"
+      );
+
+    const data =
+      await res.json();
+
+    setText(
+      "walletBalance",
+      Number(data.balance ?? 0)
+        .toFixed(2) +
+      " USDT"
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Wallet Status Error:",
+      error
+    );
+
+    setText(
+      "walletBalance",
+      "خطا"
+    );
+  }
+}
+
+// =========================
+// Wallet Deposit
+// =========================
+async function walletDeposit() {
+
+  try {
+
+    const res =
+      await fetch(
+        API + "/wallet-deposit"
+      );
+
+    const data =
+      await res.json();
+
+    if (!data.ok) {
+
+      alert(
+        data.message ||
+        "واریز انجام نشد"
+      );
+
+      return;
+    }
+
+    await getWalletStatus();
+    await getWalletTransactions();
+
+    alert(
+      "100 USDT به کیف پول تستی اضافه شد."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Wallet Deposit Error:",
+      error
+    );
+
+    alert(
+      "خطا در واریز"
+    );
+  }
+}
+
+// =========================
+// Wallet Withdraw
+// =========================
+async function walletWithdraw() {
+
+  try {
+
+    const res =
+      await fetch(
+        API + "/wallet-withdraw"
+      );
+
+    const data =
+      await res.json();
+
+    if (!data.ok) {
+
+      alert(
+        data.message ||
+        "برداشت انجام نشد"
+      );
+
+      return;
+    }
+
+    await getWalletStatus();
+    await getWalletTransactions();
+
+    alert(
+      "20 USDT از کیف پول تستی برداشت شد."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Wallet Withdraw Error:",
+      error
+    );
+
+    alert(
+      "خطا در برداشت"
+    );
+  }
+}
+
+// =========================
+// Wallet Transactions
+// =========================
+async function getWalletTransactions() {
+
+  try {
+
+    const res =
+      await fetch(
+        API + "/wallet-transactions"
+      );
+
+    const data =
+      await res.json();
+
+    const list =
+      document.getElementById(
+        "walletTransactions"
+      );
+
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    if (
+      !data.transactions ||
+      data.transactions.length === 0
+    ) {
+
+      list.innerHTML =
+        "<p>هنوز تراکنشی ثبت نشده.</p>";
+
+      return;
+    }
+
+    data.transactions
+      .slice()
+      .reverse()
+      .forEach(tx => {
+
+        const item =
+          document.createElement(
+            "div"
+          );
+
+        item.className =
+          "wallet-transaction";
+
+        const title =
+          tx.type === "DEPOSIT"
+            ? "🟢 واریز"
+            : "🔴 برداشت";
+
+        const amount =
+          Number(tx.amount || 0)
+            .toFixed(2);
+
+        const date =
+          tx.timestamp
+            ? new Date(
+                tx.timestamp
+              ).toLocaleString(
+                "fa-IR"
+              )
+            : "-";
+
+        item.innerHTML = `
+          <div>${title}</div>
+          <div>${amount} USDT</div>
+          <small>${date}</small>
+        `;
+
+        list.appendChild(
+          item
+        );
+      });
+
+  } catch (error) {
+
+    console.error(
+      "Wallet Transactions Error:",
+      error
+    );
+  }
+}
+
+// =========================
+// Initial Load
+// =========================
+async function initApp() {
+
+  await getStatus();
+  await getBTCPrice();
+  await getAnalysis();
+
+  await getPaperStatus();
+
+  await getWalletStatus();
+  await getWalletTransactions();
+}
+
+// =========================
+// Refresh
+// =========================
+initApp();
+
+setInterval(
+  getStatus,
+  15000
+);
+
+setInterval(
+  getBTCPrice,
+  15000
+);
+
+setInterval(
+  getAnalysis,
+  15000
+);
+
+setInterval(
+  getPaperStatus,
+  15000
+);
+
+setInterval(
+  getWalletStatus,
+  15000
+);
+
+setInterval(
+  getWalletTransactions,
+  30000
+);

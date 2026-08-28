@@ -22,6 +22,14 @@ console.log(
   "Telegram User:",
   getTelegramUser()
 );
+
+if (tg) {
+  alert(
+    tg.initData
+      ? "Telegram initData دریافت شد"
+      : "Telegram initData خالی است"
+  );
+}
 const API = "https://ai-trader-backend-1-n7yv.onrender.com";
 
 // =========================

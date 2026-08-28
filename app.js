@@ -1,3 +1,25 @@
+// =========================
+// Telegram WebApp
+// =========================
+const tg = window.Telegram?.WebApp;
+
+if (tg) {
+  tg.ready();
+  tg.expand();
+}
+
+function getTelegramInitData() {
+  return tg?.initData || "";
+}
+
+function getTelegramUser() {
+  return tg?.initDataUnsafe?.user || null;
+}
+
+console.log(
+  "Telegram User:",
+  getTelegramUser()
+);
 const API = "https://ai-trader-backend-1-n7yv.onrender.com";
 
 // =========================
@@ -373,6 +395,9 @@ async function paperSell() {
 // =========================
 // Wallet Status
 // =========================
+// =========================
+// Wallet Status
+// =========================
 async function getWalletStatus() {
 
   try {
@@ -392,6 +417,22 @@ async function getWalletStatus() {
       " USDT"
     );
 
+    setText(
+      "walletAvailableBalance",
+      Number(
+        data.availableBalance ?? 0
+      ).toFixed(2) +
+      " USDT"
+    );
+
+    setText(
+      "walletLockedBalance",
+      Number(
+        data.lockedBalance ?? 0
+      ).toFixed(2) +
+      " USDT"
+    );
+
   } catch (error) {
 
     console.error(
@@ -401,6 +442,16 @@ async function getWalletStatus() {
 
     setText(
       "walletBalance",
+      "خطا"
+    );
+
+    setText(
+      "walletAvailableBalance",
+      "خطا"
+    );
+
+    setText(
+      "walletLockedBalance",
       "خطا"
     );
   }
@@ -562,10 +613,32 @@ async function getWalletTransactions() {
               )
             : "-";
 
+        const status =
+          tx.status === "PENDING"
+            ? "⏳ در انتظار تأیید"
+            : tx.status === "COMPLETED"
+              ? "✅ تکمیل‌شده"
+              : tx.status || "-";
+
+        const confirmButton =
+          tx.type === "WITHDRAW" &&
+          tx.status === "PENDING"
+            ? `
+              <button
+                class="confirm-withdraw-btn"
+                onclick="confirmWalletWithdraw(${tx.id})"
+              >
+                ✅ تأیید برداشت
+              </button>
+            `
+            : "";
+
         item.innerHTML = `
           <div>${title}</div>
           <div>${amount} USDT</div>
+          <small>${status}</small>
           <small>${date}</small>
+          ${confirmButton}
         `;
 
         list.appendChild(
@@ -578,6 +651,57 @@ async function getWalletTransactions() {
     console.error(
       "Wallet Transactions Error:",
       error
+    );
+  }
+}
+
+// =========================
+// Confirm Wallet Withdraw
+// =========================
+async function confirmWalletWithdraw(
+  transactionId
+) {
+
+  try {
+
+    const res =
+      await fetch(
+        API +
+        "/wallet-confirm-withdraw?id=" +
+        encodeURIComponent(
+          transactionId
+        )
+      );
+
+    const data =
+      await res.json();
+
+    if (!data.ok) {
+
+      alert(
+        data.message ||
+        "تأیید برداشت انجام نشد"
+      );
+
+      return;
+    }
+
+    await getWalletStatus();
+    await getWalletTransactions();
+
+    alert(
+      "برداشت با موفقیت تأیید شد."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Confirm Withdraw Error:",
+      error
+    );
+
+    alert(
+      "خطا در تأیید برداشت"
     );
   }
 }

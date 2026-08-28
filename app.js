@@ -1,7 +1,6 @@
 // =========================
 // Telegram WebApp
 // =========================
-alert("AI-Trader نسخه جدید اجرا شد");
 
 const tg = window.Telegram?.WebApp;
 

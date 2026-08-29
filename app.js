@@ -418,6 +418,8 @@ async function paperSell() {
 // =========================
 async function getWalletStatus() {
 
+  console.log("WALLET STATUS START", API, getTelegramInitData().length);
+
   try {
 
     const res =

@@ -13,6 +13,15 @@ function getTelegramInitData() {
   return tg?.initData || "";
 }
 
+function getTelegramAuthHeaders() {
+  const initData = getTelegramInitData();
+
+  return initData
+    ? { "X-Telegram-Init-Data": initData }
+    : {};
+}
+
+
 function getTelegramUser() {
   return tg?.initDataUnsafe?.user || null;
 }
@@ -413,7 +422,10 @@ async function getWalletStatus() {
 
     const res =
       await fetch(
-        API + "/wallet-status"
+        API + "/wallet-status",
+        {
+          headers: getTelegramAuthHeaders()
+        }
       );
 
     const data =
@@ -485,7 +497,10 @@ async function walletDeposit() {
     }
 
     const res = await fetch(
-      API + "/wallet-deposit?amount=" + encodeURIComponent(amount)
+      API + "/wallet-deposit?amount=" + encodeURIComponent(amount),
+      {
+        headers: getTelegramAuthHeaders()
+      }
     );
 
     const data = await res.json();
@@ -518,7 +533,10 @@ async function walletWithdraw() {
 
     const res =
       await fetch(
-        API + "/wallet-withdraw"
+        API + "/wallet-withdraw",
+        {
+          headers: getTelegramAuthHeaders()
+        }
       );
 
     const data =
@@ -563,7 +581,10 @@ async function getWalletTransactions() {
 
     const res =
       await fetch(
-        API + "/wallet-transactions"
+        API + "/wallet-transactions",
+        {
+          headers: getTelegramAuthHeaders()
+        }
       );
 
     const data =
@@ -677,7 +698,10 @@ async function confirmWalletWithdraw(
         "/wallet-confirm-withdraw?id=" +
         encodeURIComponent(
           transactionId
-        )
+        ),
+        {
+          headers: getTelegramAuthHeaders()
+        }
       );
 
     const data =

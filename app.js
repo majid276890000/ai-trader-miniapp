@@ -107,6 +107,8 @@ async function startBot() {
     const res =
       await fetch(API + "/start");
 
+    console.log("WALLET RESPONSE", res.status, res.ok);
+
     const data =
       await res.json();
 

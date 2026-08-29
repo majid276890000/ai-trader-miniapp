@@ -473,41 +473,38 @@ async function walletDeposit() {
 
   try {
 
-    const res =
-      await fetch(
-        API + "/wallet-deposit"
-      );
+    const input = prompt("مبلغ واریز تستی را وارد کنید (USDT):", "10");
 
-    const data =
-      await res.json();
+    if (input === null) return;
+
+    const amount = Number(input);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      alert("مبلغ واردشده معتبر نیست.");
+      return;
+    }
+
+    const res = await fetch(
+      API + "/wallet-deposit?amount=" + encodeURIComponent(amount)
+    );
+
+    const data = await res.json();
 
     if (!data.ok) {
-
-      alert(
-        data.message ||
-        "واریز انجام نشد"
-      );
-
+      alert(data.message || "واریز انجام نشد");
       return;
     }
 
     await getWalletStatus();
     await getWalletTransactions();
 
-    alert(
-      "100 USDT به کیف پول تستی اضافه شد."
-    );
+    alert(amount + " USDT به کیف پول تستی اضافه شد.");
 
   } catch (error) {
 
-    console.error(
-      "Wallet Deposit Error:",
-      error
-    );
+    console.error("Wallet Deposit Error:", error);
 
-    alert(
-      "خطا در واریز"
-    );
+    alert("خطا در واریز");
   }
 }
 
@@ -515,6 +512,7 @@ async function walletDeposit() {
 // Wallet Withdraw
 // =========================
 async function walletWithdraw() {
+
 
   try {
 

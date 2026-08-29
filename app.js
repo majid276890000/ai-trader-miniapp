@@ -532,27 +532,35 @@ async function walletDeposit() {
 // =========================
 async function walletWithdraw() {
 
+  const amountInput = prompt("مبلغ برداشت را به USDT وارد کنید:");
+
+  if (amountInput === null) {
+    return;
+  }
+
+  const amount = Number(amountInput);
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    alert("مبلغ برداشت معتبر نیست");
+    return;
+  }
 
   try {
 
-    const res =
-      await fetch(
-        API + "/wallet-withdraw",
-        {
-          headers: getTelegramAuthHeaders()
-        }
-      );
+    const res = await fetch(
+      API + "/wallet-withdraw?amount=" + encodeURIComponent(amount),
+      {
+        headers: getTelegramAuthHeaders()
+      }
+    );
 
-    const data =
-      await res.json();
+    const data = await res.json();
 
     if (!data.ok) {
-
       alert(
         data.message ||
         "برداشت انجام نشد"
       );
-
       return;
     }
 
@@ -560,7 +568,7 @@ async function walletWithdraw() {
     await getWalletTransactions();
 
     alert(
-      "20 USDT از کیف پول تستی برداشت شد."
+      amount + " USDT برای برداشت قفل شد."
     );
 
   } catch (error) {
@@ -570,9 +578,7 @@ async function walletWithdraw() {
       error
     );
 
-    alert(
-      "خطا در برداشت"
-    );
+    alert("خطا در برداشت");
   }
 }
 

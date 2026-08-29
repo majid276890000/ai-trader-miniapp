@@ -29,7 +29,7 @@ if (tg) {
       : "Telegram initData خالی است"
   );
 }
-const API = "https://ai-trader-backend-1-n7yv.onrender.com";
+const API = "https://ai-trader-backend-xfyg.onrender.com";
 
 // =========================
 // Helper

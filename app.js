@@ -346,7 +346,18 @@ async function paperBuy() {
       await res.json();
 
     console.log("AUTO TRADE ON/OFF RESPONSE:", data);
-    alert("AUTO TRADE RESPONSE: " + JSON.stringify(data));
+    const debugStatus =
+      document.getElementById("autoTradeStatus");
+
+    if (debugStatus) {
+      debugStatus.textContent =
+        "DEBUG: " + JSON.stringify(data);
+    }
+
+    console.log(
+      "AUTO TRADE RESPONSE:",
+      data
+    );
 
     if (!data.ok) {
 

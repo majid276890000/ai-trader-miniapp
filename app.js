@@ -1080,3 +1080,158 @@ async function getTradeHistory() {
 setTimeout(() => {
   getTradeHistory();
 }, 500);
+
+// =========================
+// AUTO TRADE CONTROL
+// =========================
+async function getAutoTradeStatus() {
+
+  const status =
+    document.getElementById("autoTradeStatus");
+
+  const button =
+    document.getElementById("autoTradeButton");
+
+  if (!status || !button) return;
+
+  try {
+
+    const res =
+      await fetch(
+        API + "/auto-trade",
+        {
+          headers:
+            getTelegramAuthHeaders()
+        }
+      );
+
+    const data =
+      await res.json();
+
+    if (!data.ok) {
+      status.textContent =
+        data.message ||
+        "دریافت وضعیت ناموفق بود";
+
+      button.textContent =
+        "خطا";
+
+      return;
+    }
+
+    if (data.enabled) {
+
+      status.textContent =
+        "🟢 معامله خودکار فعال است";
+
+      button.textContent =
+        "⛔ خاموش کردن";
+
+    } else {
+
+      status.textContent =
+        "⚪ معامله خودکار خاموش است";
+
+      button.textContent =
+        "🤖 روشن کردن";
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Auto Trade Status Error:",
+      error
+    );
+
+    status.textContent =
+      "خطا در اتصال به سرور";
+
+    button.textContent =
+      "تلاش دوباره";
+  }
+}
+
+
+async function toggleAutoTrade() {
+
+  const button =
+    document.getElementById("autoTradeButton");
+
+  if (!button) return;
+
+  button.disabled = true;
+
+  try {
+
+    const currentRes =
+      await fetch(
+        API + "/auto-trade",
+        {
+          headers:
+            getTelegramAuthHeaders()
+        }
+      );
+
+    const current =
+      await currentRes.json();
+
+    if (!current.ok) {
+      alert(
+        current.message ||
+        "دریافت وضعیت ناموفق بود"
+      );
+
+      return;
+    }
+
+    const action =
+      current.enabled
+        ? "off"
+        : "on";
+
+    const res =
+      await fetch(
+        API +
+        "/auto-trade?action=" +
+        action,
+        {
+          headers:
+            getTelegramAuthHeaders()
+        }
+      );
+
+    const data =
+      await res.json();
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "تغییر وضعیت ناموفق بود"
+      );
+
+      return;
+    }
+
+    await getAutoTradeStatus();
+
+  } catch (error) {
+
+    console.error(
+      "Toggle Auto Trade Error:",
+      error
+    );
+
+    alert(
+      "خطا در اتصال به سرور"
+    );
+
+  } finally {
+
+    button.disabled = false;
+  }
+}
+
+
+setTimeout(() => {
+  getAutoTradeStatus();
+}, 700);

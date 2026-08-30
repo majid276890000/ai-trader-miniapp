@@ -965,3 +965,118 @@ async function tradeSell() {
     );
   }
 }
+
+// =========================
+// REAL TRADE HISTORY
+// =========================
+async function getTradeHistory() {
+
+  const box =
+    document.getElementById("tradeHistory");
+
+  if (!box) return;
+
+  try {
+
+    const res =
+      await fetch(
+        API + "/trade-history",
+        {
+          headers:
+            getTelegramAuthHeaders()
+        }
+      );
+
+    const data =
+      await res.json();
+
+    if (!data.ok) {
+      box.innerHTML =
+        "<p>" +
+        (
+          data.message ||
+          "دریافت تاریخچه معاملات ناموفق بود"
+        ) +
+        "</p>";
+
+      return;
+    }
+
+    const trades =
+      data.trades || [];
+
+    if (trades.length === 0) {
+      box.innerHTML =
+        "<p>هنوز معامله‌ای ثبت نشده است.</p>";
+
+      return;
+    }
+
+    box.innerHTML =
+      trades.map(trade => {
+
+        const side =
+          trade.side === "BUY"
+            ? "🟢 خرید"
+            : "🔴 فروش";
+
+        const status =
+          trade.status === "OPEN"
+            ? "باز"
+            : "بسته";
+
+        const profit =
+          Number(trade.profit || 0);
+
+        return `
+          <div class="trade-history-item">
+
+            <strong>
+              ${side}
+            </strong>
+
+            <span>
+              مبلغ:
+              ${Number(trade.amount || 0).toFixed(2)}
+              USDT
+            </span>
+
+            <span>
+              قیمت:
+              ${Number(trade.price || 0).toFixed(2)}
+            </span>
+
+            <span>
+              وضعیت:
+              ${status}
+            </span>
+
+            <span>
+              سود/زیان:
+              ${profit.toFixed(6)}
+              USDT
+            </span>
+
+          </div>
+        `;
+
+      }).join("");
+
+  } catch (error) {
+
+    console.error(
+      "Trade History Error:",
+      error
+    );
+
+    box.innerHTML =
+      "<p>خطا در دریافت تاریخچه معاملات</p>";
+  }
+}
+
+// =========================
+// LOAD TRADE HISTORY
+// =========================
+setTimeout(() => {
+  getTradeHistory();
+}, 500);

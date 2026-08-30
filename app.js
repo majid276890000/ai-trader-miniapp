@@ -528,6 +528,48 @@ async function walletDeposit() {
 }
 
 // =========================
+// TRON Wallet Address - TEST
+// =========================
+async function getTronWalletAddress() {
+
+  try {
+
+    const res = await fetch(
+      API + "/wallet-tron-address",
+      {
+        headers: getTelegramAuthHeaders()
+      }
+    );
+
+    const data = await res.json();
+
+    console.log("TRON ADDRESS RESPONSE:", data);
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "دریافت آدرس TRON انجام نشد"
+      );
+      return;
+    }
+
+    alert(
+      "آدرس تستی TRC20:\n" +
+      data.address
+    );
+
+  } catch (error) {
+
+    console.error(
+      "TRON ADDRESS ERROR:",
+      error
+    );
+
+    alert("خطا در دریافت آدرس TRON");
+  }
+}
+
+// =========================
 // Wallet Withdraw
 // =========================
 async function walletWithdraw() {

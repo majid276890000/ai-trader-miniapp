@@ -838,3 +838,67 @@ setInterval(
   getWalletTransactions,
   30000
 );
+
+// =========================
+// REAL TRADE BUY
+// =========================
+async function tradeBuy(amount) {
+
+  try {
+
+    const telegramInitData =
+      getTelegramInitData();
+
+    if (!telegramInitData) {
+      alert("Telegram احراز هویت نشده است");
+      return;
+    }
+
+    const res =
+      await fetch(
+        API + "/trade-buy?amount=" +
+        encodeURIComponent(amount),
+        {
+          headers:
+            getTelegramAuthHeaders()
+        }
+      );
+
+    const data =
+      await res.json();
+
+    console.log(
+      "TRADE BUY RESPONSE:",
+      data
+    );
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "خرید انجام نشد"
+      );
+      return;
+    }
+
+    alert(
+      "خرید واقعی با موفقیت انجام شد\n" +
+      "مبلغ: " +
+      Number(data.trade.amount)
+        .toFixed(2) +
+      " USDT"
+    );
+
+    await getWalletStatus();
+
+  } catch (error) {
+
+    console.error(
+      "Trade Buy Error:",
+      error
+    );
+
+    alert(
+      "خطا در خرید واقعی"
+    );
+  }
+}

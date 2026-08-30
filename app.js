@@ -345,6 +345,9 @@ async function paperBuy() {
     const data =
       await res.json();
 
+    console.log("AUTO TRADE ON/OFF RESPONSE:", data);
+    alert("AUTO TRADE RESPONSE: " + JSON.stringify(data));
+
     if (!data.ok) {
 
       alert(

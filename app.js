@@ -902,3 +902,66 @@ async function tradeBuy(amount) {
     );
   }
 }
+
+// =========================
+// REAL TRADE SELL
+// =========================
+async function tradeSell() {
+
+  try {
+
+    const telegramInitData =
+      getTelegramInitData();
+
+    if (!telegramInitData) {
+      alert("Telegram احراز هویت نشده است");
+      return;
+    }
+
+    const res =
+      await fetch(
+        API + "/trade-sell",
+        {
+          headers:
+            getTelegramAuthHeaders()
+        }
+      );
+
+    const data =
+      await res.json();
+
+    console.log(
+      "TRADE SELL RESPONSE:",
+      data
+    );
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "فروش انجام نشد"
+      );
+      return;
+    }
+
+    alert(
+      "فروش واقعی با موفقیت انجام شد\n" +
+      "سود/زیان: " +
+      Number(data.profit ?? 0)
+        .toFixed(2) +
+      " USDT"
+    );
+
+    await getWalletStatus();
+
+  } catch (error) {
+
+    console.error(
+      "Trade Sell Error:",
+      error
+    );
+
+    alert(
+      "خطا در فروش واقعی"
+    );
+  }
+}

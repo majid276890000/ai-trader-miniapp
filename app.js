@@ -1168,6 +1168,8 @@ async function getAutoTradeStatus() {
 
 async function toggleAutoTrade() {
 
+  console.log("TOGGLE AUTO TRADE CLICKED");
+
   const button =
     document.getElementById("autoTradeButton");
 

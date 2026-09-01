@@ -427,6 +427,42 @@ async function paperSell() {
 }
 
 // =========================
+// USDT / Toman Rate
+// =========================
+async function getUsdtTomanRate() {
+
+  try {
+
+    const res = await fetch(
+      API + "/fiat-rate"
+    );
+
+    const data = await res.json();
+
+    if (
+      !data.ok ||
+      !Number.isFinite(Number(data.rateToman)) ||
+      Number(data.rateToman) <= 0
+    ) {
+      throw new Error(
+        data.message || "Invalid USDT/Toman rate"
+      );
+    }
+
+    return Number(data.rateToman);
+
+  } catch (error) {
+
+    console.error(
+      "USDT TOMAN RATE ERROR:",
+      error
+    );
+
+    return null;
+  }
+}
+
+// =========================
 // Wallet Status
 // =========================
 // =========================
@@ -471,6 +507,30 @@ async function getWalletStatus() {
       ).toFixed(2) +
       " USDT"
     );
+
+    const tomanRate =
+      await getUsdtTomanRate();
+
+    if (tomanRate !== null) {
+
+      const tomanValue =
+        Number(data.balance ?? 0) *
+        tomanRate;
+
+      setText(
+        "walletTomanValue",
+        "ارزش تقریبی: " +
+        Math.round(tomanValue).toLocaleString("fa-IR") +
+        " تومان"
+      );
+
+    } else {
+
+      setText(
+        "walletTomanValue",
+        "ارزش تقریبی: نرخ تومان در دسترس نیست"
+      );
+    }
 
   } catch (error) {
 

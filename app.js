@@ -658,14 +658,127 @@ async function walletWithdraw() {
     return;
   }
 
+  // =========================
+  // Toman Fiat Withdrawal
+  // =========================
   if (method.trim() === "2") {
-    alert(
-      "برداشت ریالی به‌زودی فعال می‌شود.\n" +
-      "در نسخه بعدی امکان ثبت شماره شبا و دریافت تومان اضافه خواهد شد."
+
+    const fiatAmountInput = prompt(
+      "مبلغ برداشت را به تومان وارد کنید:"
     );
+
+    if (fiatAmountInput === null) {
+      return;
+    }
+
+    const fiatAmount = Number(
+      fiatAmountInput.replace(/,/g, "")
+    );
+
+    if (
+      !Number.isFinite(fiatAmount) ||
+      fiatAmount <= 0
+    ) {
+      alert("مبلغ تومان معتبر نیست");
+      return;
+    }
+
+    const accountHolder = prompt(
+      "نام و نام خانوادگی صاحب حساب را وارد کنید:"
+    );
+
+    if (accountHolder === null) {
+      return;
+    }
+
+    if (
+      accountHolder.trim().length < 2 ||
+      accountHolder.trim().length > 100
+    ) {
+      alert("نام صاحب حساب معتبر نیست");
+      return;
+    }
+
+    const ibanInput = prompt(
+      "شماره شبا را وارد کنید:\nمثال: IR123456789012345678901234"
+    );
+
+    if (ibanInput === null) {
+      return;
+    }
+
+    const iban = ibanInput
+      .replace(/\s+/g, "")
+      .toUpperCase();
+
+    if (!/^IR\d{24}$/.test(iban)) {
+      alert("شماره شبا معتبر نیست");
+      return;
+    }
+
+    try {
+
+      const res = await fetch(
+        API + "/wallet-withdraw-fiat",
+        {
+          method: "POST",
+          headers: {
+            ...getTelegramAuthHeaders(),
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            fiatAmount: fiatAmount,
+            accountHolder: accountHolder.trim(),
+            iban: iban
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      if (!data.ok) {
+        alert(
+          data.message ||
+          "درخواست برداشت ریالی انجام نشد"
+        );
+        return;
+      }
+
+      await getWalletStatus();
+      await getWalletTransactions();
+
+      alert(
+        "درخواست برداشت با موفقیت ثبت شد.\n\n" +
+        "مبلغ: " +
+        Number(data.fiatAmount).toLocaleString("fa-IR") +
+        " تومان\n" +
+        "معادل: " +
+        data.usdtAmount +
+        " USDT\n" +
+        "نرخ: " +
+        Number(data.exchangeRate).toLocaleString("fa-IR") +
+        " تومان\n\n" +
+        "وضعیت: در انتظار بررسی"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Fiat Withdraw Error:",
+        error
+      );
+
+      alert(
+        "خطا در ثبت درخواست برداشت ریالی"
+      );
+    }
+
     return;
   }
 
+  // =========================
+  // USDT Withdrawal
+  // =========================
   if (method.trim() !== "1") {
     alert("روش برداشت معتبر نیست");
     return;

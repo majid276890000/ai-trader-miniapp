@@ -650,6 +650,7 @@ async function getTronWalletAddress() {
 let selectedWithdrawMethod = "usdt";
 
 function openWithdrawModal() {
+  alert("WITHDRAW CLICK TEST");
   const modal = document.getElementById("withdrawModal");
 
   if (!modal) {

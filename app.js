@@ -588,7 +588,32 @@ async function getTronWalletAddress() {
 // =========================
 async function walletWithdraw() {
 
-  const amountInput = prompt("مبلغ برداشت را به USDT وارد کنید:");
+  const method = prompt(
+    "روش برداشت را انتخاب کنید:\n\n" +
+    "1 = برداشت USDT\n" +
+    "2 = برداشت ریالی"
+  );
+
+  if (method === null) {
+    return;
+  }
+
+  if (method.trim() === "2") {
+    alert(
+      "برداشت ریالی به‌زودی فعال می‌شود.\n" +
+      "در نسخه بعدی امکان ثبت شماره شبا و دریافت تومان اضافه خواهد شد."
+    );
+    return;
+  }
+
+  if (method.trim() !== "1") {
+    alert("روش برداشت معتبر نیست");
+    return;
+  }
+
+  const amountInput = prompt(
+    "مبلغ برداشت را به USDT وارد کنید:"
+  );
 
   if (amountInput === null) {
     return;
@@ -604,7 +629,9 @@ async function walletWithdraw() {
   try {
 
     const res = await fetch(
-      API + "/wallet-withdraw?amount=" + encodeURIComponent(amount),
+      API +
+      "/wallet-withdraw?amount=" +
+      encodeURIComponent(amount),
       {
         headers: getTelegramAuthHeaders()
       }

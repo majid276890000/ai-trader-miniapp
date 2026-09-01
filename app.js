@@ -705,7 +705,7 @@ function openWithdrawModal() {
 
   updateWithdrawReceiveAmount();
 
-  modal.classList.add("active");
+  modal.classList.add("open");
 }
 
 function closeWithdrawModal() {
@@ -713,7 +713,7 @@ function closeWithdrawModal() {
     document.getElementById("withdrawModal");
 
   if (modal) {
-    modal.classList.remove("active");
+    modal.classList.remove("open");
   }
 }
 

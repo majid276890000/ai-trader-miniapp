@@ -217,7 +217,7 @@
           واریز
         </button>
 
-        <button onclick="walletWithdraw()">
+        <button onclick="openWithdrawModal()">
           <span>−</span>
           برداشت
         </button>
@@ -327,6 +327,202 @@
 
   </div>
 
+
+
+  <!-- PROFESSIONAL WITHDRAW MODAL -->
+  <div id="withdrawModal" class="withdraw-modal">
+
+    <div class="withdraw-panel">
+
+      <div class="withdraw-header">
+        <div>
+          <div class="withdraw-eyebrow">SECURE WALLET</div>
+          <h2>برداشت دارایی</h2>
+        </div>
+
+        <button
+          type="button"
+          class="withdraw-close"
+          onclick="closeWithdrawModal()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="withdraw-balance-box">
+        <span>موجودی قابل برداشت</span>
+        <strong id="withdrawAvailableBalance">0 USDT</strong>
+      </div>
+
+      <div class="withdraw-methods">
+
+        <button
+          type="button"
+          class="withdraw-method active"
+          data-method="usdt"
+          onclick="selectWithdrawMethod('usdt')"
+        >
+          <span class="withdraw-method-icon">₮</span>
+          <span>
+            <strong>USDT</strong>
+            <small>برداشت رمزارزی</small>
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="withdraw-method"
+          data-method="fiat"
+          onclick="selectWithdrawMethod('fiat')"
+        >
+          <span class="withdraw-method-icon">﷼</span>
+          <span>
+            <strong>ریالی</strong>
+            <small>واریز به حساب بانکی</small>
+          </span>
+        </button>
+
+      </div>
+
+      <!-- USDT FORM -->
+      <div id="withdrawUsdtForm" class="withdraw-form">
+
+        <label>شبکه انتقال</label>
+
+        <div class="network-selector">
+          <span class="network-dot"></span>
+          <div>
+            <strong>TRON (TRC20)</strong>
+            <small>شبکه سریع و کم‌هزینه</small>
+          </div>
+          <span class="network-check">✓</span>
+        </div>
+
+        <label for="withdrawAmount">
+          مقدار برداشت
+        </label>
+
+        <div class="amount-input-box">
+          <input
+            id="withdrawAmount"
+            type="number"
+            inputmode="decimal"
+            min="0"
+            step="0.00000001"
+            placeholder="0.00"
+          />
+
+          <span>USDT</span>
+
+          <button
+            type="button"
+            onclick="setMaxWithdrawAmount()"
+          >
+            حداکثر
+          </button>
+        </div>
+
+        <div class="withdraw-summary">
+          <div>
+            <span>کارمزد شبکه</span>
+            <strong>محاسبه هنگام ثبت</strong>
+          </div>
+
+          <div>
+            <span>مبلغ دریافتی</span>
+            <strong id="withdrawReceiveAmount">0 USDT</strong>
+          </div>
+        </div>
+
+        <div class="withdraw-warning">
+          <span>⚠</span>
+          <p>
+            قبل از تأیید، شبکه و اطلاعات برداشت را با دقت بررسی کنید.
+            تراکنش‌های بلاکچینی پس از ارسال قابل برگشت نیستند.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- FIAT FORM -->
+      <div
+        id="withdrawFiatForm"
+        class="withdraw-form"
+        style="display:none"
+      >
+
+        <label for="fiatWithdrawAmount">
+          مبلغ برداشت
+        </label>
+
+        <div class="amount-input-box">
+          <input
+            id="fiatWithdrawAmount"
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="1000"
+            placeholder="مثلاً ۱,۰۰۰,۰۰۰"
+          />
+
+          <span>تومان</span>
+        </div>
+
+        <label for="withdrawAccountHolder">
+          نام صاحب حساب
+        </label>
+
+        <input
+          id="withdrawAccountHolder"
+          class="withdraw-text-input"
+          type="text"
+          placeholder="نام و نام خانوادگی"
+        />
+
+        <label for="withdrawIban">
+          شماره شبا
+        </label>
+
+        <input
+          id="withdrawIban"
+          class="withdraw-text-input"
+          type="text"
+          inputmode="text"
+          maxlength="26"
+          placeholder="IR........................................"
+        />
+
+        <div class="withdraw-summary fiat-summary">
+          <div>
+            <span>نرخ تبدیل</span>
+            <strong id="withdrawFiatRate">محاسبه هنگام ثبت</strong>
+          </div>
+
+          <div>
+            <span>معادل USDT</span>
+            <strong id="withdrawFiatUsdt">—</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="withdraw-submit"
+        onclick="submitProfessionalWithdraw()"
+      >
+        ادامه برداشت
+        <span>←</span>
+      </button>
+
+      <div class="withdraw-security">
+        <span>🔒</span>
+        برداشت امن با احراز هویت تلگرام
+      </div>
+
+    </div>
+
+  </div>
 
   <script src="app.js?v=20260831"></script>
 

@@ -644,72 +644,199 @@ async function getTronWalletAddress() {
 }
 
 // =========================
-// Wallet Withdraw
+// Professional Wallet Withdraw
 // =========================
-async function walletWithdraw() {
 
-  const method = prompt(
-    "روش برداشت را انتخاب کنید:\n\n" +
-    "1 = برداشت USDT\n" +
-    "2 = برداشت ریالی"
-  );
+let selectedWithdrawMethod = "usdt";
 
-  if (method === null) {
+function openWithdrawModal() {
+  const modal = document.getElementById("withdrawModal");
+
+  if (!modal) {
+    alert("پنجره برداشت پیدا نشد");
     return;
   }
 
+  selectedWithdrawMethod = "usdt";
+  selectWithdrawMethod("usdt");
+
+  const availableText =
+    document.getElementById("walletAvailableBalance")?.textContent || "0";
+
+  const available = Number(
+    availableText.replace(/[^\d.-]/g, "")
+  );
+
+  const balanceElement =
+    document.getElementById("withdrawAvailableBalance");
+
+  if (balanceElement) {
+    balanceElement.textContent =
+      (Number.isFinite(available) ? available : 0) + " USDT";
+  }
+
+  const amount =
+    document.getElementById("withdrawAmount");
+
+  if (amount) {
+    amount.value = "";
+  }
+
+  const fiatAmount =
+    document.getElementById("fiatWithdrawAmount");
+
+  if (fiatAmount) {
+    fiatAmount.value = "";
+  }
+
+  const holder =
+    document.getElementById("withdrawAccountHolder");
+
+  if (holder) {
+    holder.value = "";
+  }
+
+  const iban =
+    document.getElementById("withdrawIban");
+
+  if (iban) {
+    iban.value = "";
+  }
+
+  updateWithdrawReceiveAmount();
+
+  modal.classList.add("active");
+}
+
+function closeWithdrawModal() {
+  const modal =
+    document.getElementById("withdrawModal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+function selectWithdrawMethod(method) {
+  selectedWithdrawMethod = method;
+
+  document
+    .querySelectorAll(".withdraw-method")
+    .forEach(button => {
+      button.classList.toggle(
+        "active",
+        button.dataset.method === method
+      );
+    });
+
+  const usdtForm =
+    document.getElementById("withdrawUsdtForm");
+
+  const fiatForm =
+    document.getElementById("withdrawFiatForm");
+
+  if (usdtForm) {
+    usdtForm.style.display =
+      method === "usdt" ? "" : "none";
+  }
+
+  if (fiatForm) {
+    fiatForm.style.display =
+      method === "fiat" ? "" : "none";
+  }
+}
+
+function getAvailableWithdrawBalance() {
+  const text =
+    document.getElementById(
+      "walletAvailableBalance"
+    )?.textContent || "0";
+
+  const value = Number(
+    text.replace(/[^\d.-]/g, "")
+  );
+
+  return Number.isFinite(value) ? value : 0;
+}
+
+function setMaxWithdrawAmount() {
+  const input =
+    document.getElementById("withdrawAmount");
+
+  if (!input) {
+    return;
+  }
+
+  input.value =
+    getAvailableWithdrawBalance()
+      .toFixed(8)
+      .replace(/\.?0+$/, "");
+
+  updateWithdrawReceiveAmount();
+}
+
+function updateWithdrawReceiveAmount() {
+  const input =
+    document.getElementById("withdrawAmount");
+
+  const output =
+    document.getElementById("withdrawReceiveAmount");
+
+  if (!input || !output) {
+    return;
+  }
+
+  const amount = Number(input.value);
+
+  output.textContent =
+    Number.isFinite(amount) && amount > 0
+      ? amount.toFixed(8).replace(/\.?0+$/, "") + " USDT"
+      : "0 USDT";
+}
+
+async function submitProfessionalWithdraw() {
+
   // =========================
-  // Toman Fiat Withdrawal
+  // Fiat Withdrawal
   // =========================
-  if (method.trim() === "2") {
 
-    const fiatAmountInput = prompt(
-      "مبلغ برداشت را به تومان وارد کنید:"
-    );
+  if (selectedWithdrawMethod === "fiat") {
 
-    if (fiatAmountInput === null) {
-      return;
-    }
+    const fiatInput =
+      document.getElementById("fiatWithdrawAmount");
 
-    const fiatAmount = Number(
-      fiatAmountInput.replace(/,/g, "")
-    );
+    const holderInput =
+      document.getElementById("withdrawAccountHolder");
+
+    const ibanInput =
+      document.getElementById("withdrawIban");
+
+    const fiatAmount =
+      Number(fiatInput?.value);
+
+    const accountHolder =
+      (holderInput?.value || "").trim();
+
+    const iban =
+      (ibanInput?.value || "")
+        .replace(/\s+/g, "")
+        .toUpperCase();
 
     if (
       !Number.isFinite(fiatAmount) ||
       fiatAmount <= 0
     ) {
-      alert("مبلغ تومان معتبر نیست");
-      return;
-    }
-
-    const accountHolder = prompt(
-      "نام و نام خانوادگی صاحب حساب را وارد کنید:"
-    );
-
-    if (accountHolder === null) {
+      alert("مبلغ برداشت ریالی معتبر نیست");
       return;
     }
 
     if (
-      accountHolder.trim().length < 2 ||
-      accountHolder.trim().length > 100
+      accountHolder.length < 2 ||
+      accountHolder.length > 100
     ) {
       alert("نام صاحب حساب معتبر نیست");
       return;
     }
-
-    const ibanInput = prompt(
-      "شماره شبا را وارد کنید:\nمثال: IR123456789012345678901234"
-    );
-
-    if (ibanInput === null) {
-      return;
-    }
-
-    const iban = ibanInput
-      .replace(/\s+/g, "")
-      .toUpperCase();
 
     if (!/^IR\d{24}$/.test(iban)) {
       alert("شماره شبا معتبر نیست");
@@ -727,9 +854,9 @@ async function walletWithdraw() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            fiatAmount: fiatAmount,
-            accountHolder: accountHolder.trim(),
-            iban: iban
+            fiatAmount,
+            accountHolder,
+            iban
           })
         }
       );
@@ -746,6 +873,8 @@ async function walletWithdraw() {
 
       await getWalletStatus();
       await getWalletTransactions();
+
+      closeWithdrawModal();
 
       alert(
         "درخواست برداشت با موفقیت ثبت شد.\n\n" +
@@ -779,23 +908,26 @@ async function walletWithdraw() {
   // =========================
   // USDT Withdrawal
   // =========================
-  if (method.trim() !== "1") {
-    alert("روش برداشت معتبر نیست");
-    return;
-  }
 
-  const amountInput = prompt(
-    "مبلغ برداشت را به USDT وارد کنید:"
-  );
+  const amountInput =
+    document.getElementById("withdrawAmount");
 
-  if (amountInput === null) {
-    return;
-  }
+  const amount =
+    Number(amountInput?.value);
 
-  const amount = Number(amountInput);
+  const available =
+    getAvailableWithdrawBalance();
 
-  if (!Number.isFinite(amount) || amount <= 0) {
+  if (
+    !Number.isFinite(amount) ||
+    amount <= 0
+  ) {
     alert("مبلغ برداشت معتبر نیست");
+    return;
+  }
+
+  if (amount > available) {
+    alert("مبلغ برداشت بیشتر از موجودی قابل برداشت است");
     return;
   }
 
@@ -823,8 +955,11 @@ async function walletWithdraw() {
     await getWalletStatus();
     await getWalletTransactions();
 
+    closeWithdrawModal();
+
     alert(
-      amount + " USDT برای برداشت قفل شد."
+      amount +
+      " USDT برای برداشت قفل شد."
     );
 
   } catch (error) {

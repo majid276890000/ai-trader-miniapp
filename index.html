@@ -222,9 +222,9 @@
           برداشت
         </button>
 
-        <button onclick="getTronWalletAddress()">
+        <button onclick="openWithdrawModal(); return false;">
           <span>⌁</span>
-          TRC20
+          آدرس TRC20
         </button>
 
       </div>
@@ -398,6 +398,43 @@
           <span class="network-check">✓</span>
         </div>
 
+        <label for="withdrawAddress">
+          آدرس کیف پول مقصد
+        </label>
+
+        <div class="withdraw-address-box">
+          <input
+            id="withdrawAddress"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            placeholder="آدرس TRC20 را وارد کنید"
+          />
+          <span>TRC20</span>
+        </div>
+
+        <div class="withdraw-address-hint">
+          فقط آدرس USDT روی شبکه TRON (TRC20) را وارد کنید.
+        </div>
+
+      <div
+        id="tronAddressStatus"
+        class="withdraw-address-hint"
+        style="margin-top:8px;"
+      >
+        وضعیت آدرس: در حال بررسی...
+      </div>
+
+      <button
+        type="button"
+        id="saveTronAddressBtn"
+        class="withdraw-submit"
+        onclick="saveTronWithdrawalAddress()"
+        style="margin-top:10px;"
+      >
+        ثبت آدرس برای تأیید
+      </button>
+
         <label for="withdrawAmount">
           مقدار برداشت
         </label>
@@ -523,6 +560,29 @@
     </div>
 
   </div>
+
+  <!-- ADMIN TRON ADDRESS PANEL -->
+  <section
+    id="adminTronPanel"
+    class="card"
+    style="display:none; margin-top:16px;"
+  >
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">ADMIN PANEL</div>
+        <h2>تأیید آدرس‌های TRC20</h2>
+      </div>
+    </div>
+
+    <div id="adminTronStatus">
+      در حال بررسی درخواست‌ها...
+    </div>
+
+    <div
+      id="adminTronPendingList"
+      style="margin-top:12px;"
+    ></div>
+  </section>
 
   <script src="app.js?v=20260902"></script>
 

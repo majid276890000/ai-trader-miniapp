@@ -602,11 +602,101 @@ async function walletDeposit() {
 }
 
 // =========================
-// TRON Wallet Address - TEST
+// TRON Withdrawal Address
 // =========================
-async function getTronWalletAddress() {
+async function saveTronWithdrawalAddress() {
+
+  const input = document.getElementById("withdrawAddress");
+  const statusEl = document.getElementById("tronAddressStatus");
+  const button = document.getElementById("saveTronAddressBtn");
+
+  const address = String(input?.value || "").trim();
+
+  if (!/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(address)) {
+    alert("آدرس TRC20 معتبر نیست");
+    return;
+  }
 
   try {
+
+    if (button) {
+      button.disabled = true;
+      button.textContent = "در حال ثبت...";
+    }
+
+    const res = await fetch(
+      API + "/wallet-tron-address",
+      {
+        method: "POST",
+        headers: {
+          ...getTelegramAuthHeaders(),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          address: address,
+          network: "TRC20"
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    console.log("TRON ADDRESS SAVE RESPONSE:", data);
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "ثبت آدرس TRC20 انجام نشد"
+      );
+      return;
+    }
+
+    if (statusEl) {
+      statusEl.textContent =
+        "وضعیت آدرس: در انتظار تأیید مدیر";
+    }
+
+    alert(
+      "آدرس TRC20 با موفقیت ثبت شد.\n" +
+      "پس از تأیید مدیر، برداشت فعال می‌شود."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "TRON ADDRESS SAVE ERROR:",
+      error
+    );
+
+    alert("خطا در ثبت آدرس TRC20");
+
+  } finally {
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = "ثبت آدرس برای تأیید";
+    }
+  }
+}
+
+// =========================
+// Professional Wallet Withdraw
+// =========================
+
+let selectedWithdrawMethod = "usdt";
+
+async function loadTronWithdrawalAddress() {
+
+  const input = document.getElementById("withdrawAddress");
+  const statusEl = document.getElementById("tronAddressStatus");
+  const button = document.getElementById("saveTronAddressBtn");
+
+  try {
+
+    if (statusEl) {
+      statusEl.textContent =
+        "وضعیت آدرس: در حال بررسی...";
+    }
 
     const res = await fetch(
       API + "/wallet-tron-address",
@@ -617,37 +707,65 @@ async function getTronWalletAddress() {
 
     const data = await res.json();
 
-    console.log("TRON ADDRESS RESPONSE:", data);
+    console.log(
+      "TRON ADDRESS STATUS RESPONSE:",
+      data
+    );
 
     if (!data.ok) {
-      alert(
-        data.message ||
-        "دریافت آدرس TRON انجام نشد"
-      );
+      if (statusEl) {
+        statusEl.textContent =
+          data.message ||
+          "خطا در دریافت وضعیت آدرس";
+      }
       return;
     }
 
-    alert(
-      "آدرس تستی TRC20:\n" +
-      data.address
-    );
+    if (input) {
+      input.value = data.address || "";
+    }
+
+    const status =
+      data.addressStatus || "PENDING";
+
+    if (statusEl) {
+
+      if (status === "APPROVED") {
+        statusEl.textContent =
+          "وضعیت آدرس: تأیید شده ✓";
+      } else if (status === "REJECTED") {
+        statusEl.textContent =
+          "وضعیت آدرس: رد شده — آدرس جدید ثبت کنید";
+      } else {
+        statusEl.textContent =
+          "وضعیت آدرس: در انتظار تأیید مدیر";
+      }
+    }
+
+    if (button) {
+
+      if (status === "APPROVED") {
+        button.textContent =
+          "تغییر آدرس";
+      } else {
+        button.textContent =
+          "ثبت آدرس برای تأیید";
+      }
+    }
 
   } catch (error) {
 
     console.error(
-      "TRON ADDRESS ERROR:",
+      "LOAD TRON ADDRESS ERROR:",
       error
     );
 
-    alert("خطا در دریافت آدرس TRON");
+    if (statusEl) {
+      statusEl.textContent =
+        "خطا در دریافت وضعیت آدرس";
+    }
   }
 }
-
-// =========================
-// Professional Wallet Withdraw
-// =========================
-
-let selectedWithdrawMethod = "usdt";
 
 function openWithdrawModal() {
   const modal = document.getElementById("withdrawModal");
@@ -706,6 +824,8 @@ function openWithdrawModal() {
   updateWithdrawReceiveAmount();
 
   modal.classList.add("open");
+
+  loadTronWithdrawalAddress();
 }
 
 function closeWithdrawModal() {
@@ -912,6 +1032,25 @@ async function submitProfessionalWithdraw() {
   const amountInput =
     document.getElementById("withdrawAmount");
 
+  const addressInput =
+    document.getElementById("withdrawAddress");
+
+  const statusEl =
+    document.getElementById("tronAddressStatus");
+
+  const destinationAddress =
+    (addressInput?.value || "").trim();
+
+  if (!destinationAddress) {
+    alert("ابتدا آدرس TRC20 خود را ثبت کنید");
+    return;
+  }
+
+  if (!/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(destinationAddress)) {
+    alert("آدرس TRC20 معتبر نیست");
+    return;
+  }
+
   const amount =
     Number(amountInput?.value);
 
@@ -933,16 +1072,73 @@ async function submitProfessionalWithdraw() {
 
   try {
 
-    const res = await fetch(
-      API +
-      "/wallet-withdraw?amount=" +
-      encodeURIComponent(amount),
+    const addressRes = await fetch(
+      API + "/wallet-tron-address",
       {
         headers: getTelegramAuthHeaders()
       }
     );
 
-    const data = await res.json();
+    const addressData =
+      await addressRes.json();
+
+    console.log(
+      "TRON ADDRESS CHECK BEFORE WITHDRAW:",
+      addressData
+    );
+
+    if (!addressData.ok) {
+      alert(
+        addressData.message ||
+        "بررسی آدرس TRC20 انجام نشد"
+      );
+      return;
+    }
+
+    const approvedAddress =
+      String(addressData.address || "").trim();
+
+    const addressStatus =
+      addressData.addressStatus || "PENDING";
+
+    if (addressStatus !== "APPROVED") {
+
+      if (statusEl) {
+        statusEl.textContent =
+          addressStatus === "REJECTED"
+            ? "وضعیت آدرس: رد شده — آدرس جدید ثبت کنید"
+            : "وضعیت آدرس: در انتظار تأیید مدیر";
+      }
+
+      alert(
+        addressStatus === "REJECTED"
+          ? "آدرس TRC20 شما رد شده است. لطفاً آدرس جدید ثبت کنید."
+          : "آدرس TRC20 هنوز توسط مدیر تأیید نشده است."
+      );
+
+      return;
+    }
+
+    if (approvedAddress !== destinationAddress) {
+      alert(
+        "آدرس واردشده با آدرس تأییدشده مطابقت ندارد."
+      );
+      return;
+    }
+
+    const res = await fetch(
+      API +
+      "/wallet-withdraw?amount=" +
+      encodeURIComponent(amount) +
+      "&address=" +
+      encodeURIComponent(destinationAddress),
+      {
+        headers: getTelegramAuthHeaders()
+      }
+    );
+
+    const data =
+      await res.json();
 
     if (!data.ok) {
       alert(
@@ -1586,3 +1782,244 @@ async function toggleAutoTrade() {
 setTimeout(() => {
   getAutoTradeStatus();
 }, 700);
+
+/* =====================================================
+   ADMIN TRON ADDRESS PANEL
+   ===================================================== */
+
+async function loadAdminTronPanel() {
+
+  const panel =
+    document.getElementById("adminTronPanel");
+
+  const statusEl =
+    document.getElementById("adminTronStatus");
+
+  const listEl =
+    document.getElementById("adminTronPendingList");
+
+  if (!panel || !statusEl || !listEl) {
+    return;
+  }
+
+  try {
+
+    const res = await fetch(
+      API + "/admin/wallet-tron-pending",
+      {
+        headers: getTelegramAuthHeaders()
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(
+      "ADMIN TRON PENDING RESPONSE:",
+      data
+    );
+
+    if (!data.ok) {
+
+      panel.style.display = "none";
+
+      return;
+    }
+
+    panel.style.display = "block";
+
+    if (!data.wallets || data.wallets.length === 0) {
+
+      statusEl.textContent =
+        "درخواست در انتظار تأیید وجود ندارد.";
+
+      listEl.innerHTML = "";
+
+      return;
+    }
+
+    statusEl.textContent =
+      data.count +
+      " درخواست در انتظار تأیید";
+
+    listEl.innerHTML =
+      data.wallets.map(wallet => {
+
+        const userId =
+          String(wallet.user_id || "");
+
+        const address =
+          String(wallet.tron_address || "");
+
+        return `
+          <div
+            class="card"
+            style="margin-top:12px;"
+          >
+
+            <div>
+              <strong>کاربر #${userId}</strong>
+            </div>
+
+            <div
+              style="
+                margin-top:8px;
+                word-break:break-all;
+                direction:ltr;
+                text-align:left;
+              "
+            >
+              ${address}
+            </div>
+
+            <div
+              style="
+                margin-top:6px;
+                font-size:13px;
+                opacity:.75;
+              "
+            >
+              شبکه: TRC20
+            </div>
+
+            <div
+              style="
+                display:flex;
+                gap:8px;
+                margin-top:12px;
+              "
+            >
+
+              <button
+                type="button"
+                onclick="approveAdminTronAddress(${userId})"
+              >
+                ✓ تأیید
+              </button>
+
+              <button
+                type="button"
+                onclick="rejectAdminTronAddress(${userId})"
+              >
+                ✕ رد
+              </button>
+
+            </div>
+
+          </div>
+        `;
+      }).join("");
+
+  } catch (error) {
+
+    console.error(
+      "ADMIN TRON PANEL ERROR:",
+      error
+    );
+
+    panel.style.display = "none";
+  }
+}
+
+
+async function adminTronAddressAction(
+  action,
+  userId
+) {
+
+  try {
+
+    const res = await fetch(
+      API +
+      "/admin/wallet-tron-" +
+      action,
+      {
+        method: "POST",
+        headers: {
+          ...getTelegramAuthHeaders(),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: Number(userId)
+        })
+      }
+    );
+
+    const data =
+      await res.json();
+
+    console.log(
+      "ADMIN TRON ACTION RESPONSE:",
+      data
+    );
+
+    if (!data.ok) {
+
+      alert(
+        data.message ||
+        "عملیات انجام نشد"
+      );
+
+      return;
+    }
+
+    alert(
+      action === "approve"
+        ? "آدرس TRC20 تأیید شد."
+        : "آدرس TRC20 رد شد."
+    );
+
+    await loadAdminTronPanel();
+
+  } catch (error) {
+
+    console.error(
+      "ADMIN TRON ACTION ERROR:",
+      error
+    );
+
+    alert(
+      "خطا در انجام عملیات"
+    );
+  }
+}
+
+
+async function approveAdminTronAddress(userId) {
+
+  if (
+    !confirm(
+      "آیا از تأیید این آدرس TRC20 مطمئن هستید؟"
+    )
+  ) {
+    return;
+  }
+
+  await adminTronAddressAction(
+    "approve",
+    userId
+  );
+}
+
+
+async function rejectAdminTronAddress(userId) {
+
+  if (
+    !confirm(
+      "آیا از رد این آدرس TRC20 مطمئن هستید؟"
+    )
+  ) {
+    return;
+  }
+
+  await adminTronAddressAction(
+    "reject",
+    userId
+  );
+}
+
+
+/* Load admin panel */
+setTimeout(() => {
+  loadAdminTronPanel();
+}, 1200);
+

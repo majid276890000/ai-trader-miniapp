@@ -557,25 +557,53 @@ async function getWalletStatus() {
 }
 
 // =========================
-// Wallet Deposit
+// Wallet Deposit - Real TRC20
 // =========================
 async function walletDeposit() {
 
+  const modal =
+    document.getElementById("depositModal");
+
+  if (!modal) {
+    alert("صفحه واریز در دسترس نیست.");
+    return;
+  }
+
+  modal.classList.add("open");
+
+  const addressInput =
+    document.getElementById("depositAddress");
+
+  const statusEl =
+    document.getElementById("depositAddressStatus");
+
+  const txidInput =
+    document.getElementById("depositTxid");
+
+  const resultEl =
+    document.getElementById("depositResult");
+
+  if (addressInput) {
+    addressInput.value = "";
+  }
+
+  if (txidInput) {
+    txidInput.value = "";
+  }
+
+  if (resultEl) {
+    resultEl.textContent = "";
+  }
+
+  if (statusEl) {
+    statusEl.textContent =
+      "در حال دریافت آدرس واریز...";
+  }
+
   try {
 
-    const input = prompt("مبلغ واریز تستی را وارد کنید (USDT):", "10");
-
-    if (input === null) return;
-
-    const amount = Number(input);
-
-    if (!Number.isFinite(amount) || amount <= 0) {
-      alert("مبلغ واردشده معتبر نیست.");
-      return;
-    }
-
     const res = await fetch(
-      API + "/wallet-deposit?amount=" + encodeURIComponent(amount),
+      API + "/wallet-deposit-address",
       {
         headers: getTelegramAuthHeaders()
       }
@@ -584,26 +612,224 @@ async function walletDeposit() {
     const data = await res.json();
 
     if (!data.ok) {
-      alert(data.message || "واریز انجام نشد");
+      if (statusEl) {
+        statusEl.textContent =
+          data.message ||
+          "آدرس واریز دریافت نشد";
+      }
       return;
+    }
+
+    if (
+      !data.depositEnabled ||
+      !data.address
+    ) {
+      if (statusEl) {
+        statusEl.textContent =
+          "آدرس واریز TRC20 هنوز برای این کیف پول فعال نشده است.";
+      }
+      return;
+    }
+
+    if (addressInput) {
+      addressInput.value =
+        String(data.address).trim();
+    }
+
+    if (statusEl) {
+      statusEl.textContent =
+        "شبکه: " +
+        (data.network || "TRC20") +
+        " — آدرس آماده دریافت واریز است.";
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Deposit Address Error:",
+      error
+    );
+
+    if (statusEl) {
+      statusEl.textContent =
+        "خطا در دریافت آدرس واریز.";
+    }
+  }
+}
+
+
+// =========================
+// Close Deposit Modal
+// =========================
+function closeDepositModal() {
+
+  const modal =
+    document.getElementById("depositModal");
+
+  if (modal) {
+    modal.classList.remove("open");
+  }
+}
+
+
+// =========================
+// Copy Deposit Address
+// =========================
+async function copyDepositAddress() {
+
+  const input =
+    document.getElementById("depositAddress");
+
+  const address =
+    String(input?.value || "").trim();
+
+  if (!address) {
+    alert("آدرس واریز هنوز آماده نیست.");
+    return;
+  }
+
+  try {
+
+    await navigator.clipboard.writeText(address);
+
+    const button =
+      document.getElementById(
+        "copyDepositAddressBtn"
+      );
+
+    if (button) {
+      const oldText = button.textContent;
+
+      button.textContent = "کپی شد ✓";
+
+      setTimeout(() => {
+        button.textContent = oldText;
+      }, 1800);
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Copy Deposit Address Error:",
+      error
+    );
+
+    alert(
+      "کپی خودکار انجام نشد. آدرس را دستی کپی کنید."
+    );
+  }
+}
+
+
+// =========================
+// Submit Real TRC20 Deposit
+// =========================
+async function submitDeposit() {
+
+  const txidInput =
+    document.getElementById("depositTxid");
+
+  const submitButton =
+    document.getElementById("submitDepositBtn");
+
+  const resultEl =
+    document.getElementById("depositResult");
+
+  const txid =
+    String(txidInput?.value || "").trim();
+
+  if (!/^[a-fA-F0-9]{64}$/.test(txid)) {
+
+    if (resultEl) {
+      resultEl.textContent =
+        "TXID واردشده معتبر نیست.";
+    }
+
+    return;
+  }
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent =
+      "در حال بررسی بلاکچین...";
+  }
+
+  if (resultEl) {
+    resultEl.textContent =
+      "در حال بررسی تراکنش روی شبکه TRON...";
+  }
+
+  try {
+
+    const res = await fetch(
+      API + "/wallet-deposit",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getTelegramAuthHeaders()
+        },
+        body: JSON.stringify({
+          txid: txid
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!data.ok) {
+
+      if (resultEl) {
+        resultEl.textContent =
+          data.message ||
+          "واریز تأیید نشد.";
+      }
+
+      return;
+    }
+
+    if (resultEl) {
+      resultEl.textContent =
+        "واریز با موفقیت تأیید شد: " +
+        data.amount +
+        " USDT";
+    }
+
+    if (txidInput) {
+      txidInput.value = "";
     }
 
     await getWalletStatus();
     await getWalletTransactions();
 
-    alert(amount + " USDT به کیف پول تستی اضافه شد.");
-
   } catch (error) {
 
-    console.error("Wallet Deposit Error:", error);
+    console.error(
+      "Submit Deposit Error:",
+      error
+    );
 
-    alert("خطا در واریز");
+    if (resultEl) {
+      resultEl.textContent =
+        "خطا در ارتباط با سرور.";
+    }
+
+  } finally {
+
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent =
+        "بررسی و ثبت واریز";
+    }
   }
 }
+
 
 // =========================
 // TRON Withdrawal Address
 // =========================
+
+
 async function saveTronWithdrawalAddress() {
 
   const input = document.getElementById("withdrawAddress");
@@ -1133,6 +1359,7 @@ async function submitProfessionalWithdraw() {
       "&address=" +
       encodeURIComponent(destinationAddress),
       {
+        method: "POST",
         headers: getTelegramAuthHeaders()
       }
     );
@@ -1245,18 +1472,7 @@ async function getWalletTransactions() {
               ? "✅ تکمیل‌شده"
               : tx.status || "-";
 
-        const confirmButton =
-          tx.type === "WITHDRAW" &&
-          tx.status === "PENDING"
-            ? `
-              <button
-                class="confirm-withdraw-btn"
-                onclick="confirmWalletWithdraw(${tx.id})"
-              >
-                ✅ تأیید برداشت
-              </button>
-            `
-            : "";
+        const confirmButton = "";
 
         item.innerHTML = `
           <div>${title}</div>
@@ -1276,60 +1492,6 @@ async function getWalletTransactions() {
     console.error(
       "Wallet Transactions Error:",
       error
-    );
-  }
-}
-
-// =========================
-// Confirm Wallet Withdraw
-// =========================
-async function confirmWalletWithdraw(
-  transactionId
-) {
-
-  try {
-
-    const res =
-      await fetch(
-        API +
-        "/wallet-confirm-withdraw?id=" +
-        encodeURIComponent(
-          transactionId
-        ),
-        {
-          headers: getTelegramAuthHeaders()
-        }
-      );
-
-    const data =
-      await res.json();
-
-    if (!data.ok) {
-
-      alert(
-        data.message ||
-        "تأیید برداشت انجام نشد"
-      );
-
-      return;
-    }
-
-    await getWalletStatus();
-    await getWalletTransactions();
-
-    alert(
-      "برداشت با موفقیت تأیید شد."
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Confirm Withdraw Error:",
-      error
-    );
-
-    alert(
-      "خطا در تأیید برداشت"
     );
   }
 }

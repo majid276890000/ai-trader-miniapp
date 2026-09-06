@@ -561,6 +561,109 @@
 
   </div>
 
+  <!-- PROFESSIONAL DEPOSIT MODAL -->
+  <div id="depositModal" class="withdraw-modal">
+
+    <div class="withdraw-panel">
+
+      <div class="withdraw-header">
+        <div>
+          <div class="withdraw-eyebrow">SECURE WALLET</div>
+          <h2>واریز USDT</h2>
+        </div>
+
+        <button
+          type="button"
+          class="withdraw-close"
+          onclick="closeDepositModal()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="withdraw-balance-box">
+        <span>شبکه واریز</span>
+        <strong>TRON (TRC20)</strong>
+      </div>
+
+      <div class="deposit-address-section">
+
+        <label>آدرس اختصاصی واریز شما</label>
+
+        <div class="withdraw-address-box">
+          <input
+            id="depositAddress"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            readonly
+            placeholder="در حال دریافت آدرس..."
+          />
+
+          <button
+            type="button"
+            id="copyDepositAddressBtn"
+            onclick="copyDepositAddress()"
+          >
+            کپی
+          </button>
+        </div>
+
+        <div
+          id="depositAddressStatus"
+          class="withdraw-address-hint"
+          style="margin-top:8px;"
+        >
+          در حال بررسی وضعیت آدرس...
+        </div>
+
+      </div>
+
+      <div class="withdraw-security" style="margin-top:16px;">
+        <span>⚠️</span>
+        فقط USDT روی شبکه TRON (TRC20) ارسال کنید.
+      </div>
+
+      <label
+        for="depositTxid"
+        style="display:block; margin-top:18px;"
+      >
+        TXID تراکنش
+      </label>
+
+      <input
+        id="depositTxid"
+        type="text"
+        inputmode="text"
+        autocomplete="off"
+        placeholder="TXID تراکنش را وارد کنید"
+        style="width:100%; margin-top:8px;"
+      />
+
+      <div class="withdraw-address-hint" style="margin-top:8px;">
+        مبلغ واریز توسط سیستم از روی بلاکچین شناسایی می‌شود و نیازی به وارد کردن مبلغ نیست.
+      </div>
+
+      <button
+        type="button"
+        id="submitDepositBtn"
+        class="withdraw-submit"
+        onclick="submitDeposit()"
+        style="margin-top:14px;"
+      >
+        بررسی و ثبت واریز
+      </button>
+
+      <div
+        id="depositResult"
+        class="withdraw-address-hint"
+        style="margin-top:12px; text-align:center;"
+      ></div>
+
+    </div>
+
+  </div>
+
   <!-- ADMIN TRON ADDRESS PANEL -->
   <section
     id="adminTronPanel"

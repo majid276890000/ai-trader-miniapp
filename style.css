@@ -753,3 +753,55 @@ footer small {
   font-size: 9px;
   text-align: center;
 }
+
+/* =========================
+   REAL TRC20 DEPOSIT UI
+   ========================= */
+
+.deposit-address-section {
+  margin-top: 14px;
+}
+
+.deposit-address-section > label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.withdraw-address-box {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.withdraw-address-box input {
+  flex: 1;
+  min-width: 0;
+}
+
+#copyDepositAddressBtn {
+  flex: 0 0 auto;
+  min-width: 58px;
+  padding: 0 12px;
+  border: 1px solid rgba(0, 217, 255, 0.28);
+  border-radius: 11px;
+  color: #ffffff;
+  background: rgba(0, 217, 255, 0.08);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#copyDepositAddressBtn:active {
+  transform: scale(0.97);
+}
+
+#submitDepositBtn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+#depositResult {
+  min-height: 18px;
+  line-height: 1.8;
+}

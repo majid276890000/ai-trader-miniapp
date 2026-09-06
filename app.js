@@ -2201,83 +2201,114 @@ async function loadAdminWithdrawPanel() {
     <div class="section-heading">
       <div>
         <div class="eyebrow">WITHDRAWALS</div>
-        <h2>برداشت‌های در انتظار پردازش</h2>
+        <h2>مدیریت برداشت‌ها</h2>
       </div>
     </div>
     <div id="adminWithdrawStatus">در حال بررسی برداشت‌ها...</div>
     <div id="adminWithdrawPendingList" style="margin-top:12px;"></div>
+    <div id="adminWithdrawProcessingList" style="margin-top:12px;"></div>
   `;
 
   try {
-    const res = await fetch(
-      API + "/admin/wallet-withdraw-pending",
-      {
-        headers: getTelegramAuthHeaders()
-      }
-    );
+    const headers = getTelegramAuthHeaders();
 
-    const data = await res.json();
+    const [pendingRes, processingRes] = await Promise.all([
+      fetch(API + "/admin/wallet-withdraw-pending", { headers }),
+      fetch(API + "/admin/wallet-withdraw-processing", { headers })
+    ]);
 
-    if (!data.ok) {
+    const pendingData = await pendingRes.json();
+    const processingData = await processingRes.json();
+
+    if (!pendingData.ok || !processingData.ok) {
       section.innerHTML = "";
       return;
     }
 
     const statusEl = document.getElementById("adminWithdrawStatus");
-    const listEl = document.getElementById("adminWithdrawPendingList");
+    const pendingListEl = document.getElementById("adminWithdrawPendingList");
+    const processingListEl = document.getElementById("adminWithdrawProcessingList");
 
-    if (!data.withdrawals || data.withdrawals.length === 0) {
-      statusEl.textContent = "برداشت در انتظار پردازش وجود ندارد.";
-      listEl.innerHTML = "";
-      return;
-    }
+    const pendingWithdrawals = pendingData.withdrawals || [];
+    const processingWithdrawals = processingData.withdrawals || [];
 
     statusEl.textContent =
-      data.count + " برداشت در انتظار پردازش";
+      pendingWithdrawals.length +
+      " در انتظار پردازش — " +
+      processingWithdrawals.length +
+      " در حال پردازش";
 
-    listEl.innerHTML = data.withdrawals.map(withdrawal => {
-      const id = Number(withdrawal.id);
-      const userId = String(withdrawal.user_id || "");
-      const amount = String(withdrawal.amount || "0");
-      const address = String(withdrawal.destination_address || "");
+    pendingListEl.innerHTML = `
+      <div class="eyebrow">PENDING</div>
+      ${
+        pendingWithdrawals.length === 0
+          ? '<div style="margin-top:8px;opacity:.75;">برداشت در انتظار پردازش وجود ندارد.</div>'
+          : pendingWithdrawals.map(withdrawal => {
+              const id = Number(withdrawal.id);
+              const userId = String(withdrawal.user_id || "");
+              const amount = String(withdrawal.amount || "0");
+              const address = String(withdrawal.destination_address || "");
 
-      return `
-        <div class="card" style="margin-top:12px;">
-          <div>
-            <strong>برداشت #${id}</strong>
-          </div>
+              return `
+                <div class="card" style="margin-top:12px;">
+                  <div><strong>برداشت #${id}</strong></div>
+                  <div style="margin-top:8px;">
+                    کاربر #${userId} — ${amount} ${withdrawal.currency || "USDT"}
+                  </div>
+                  <div style="margin-top:8px;word-break:break-all;direction:ltr;text-align:left;">
+                    ${address}
+                  </div>
+                  <div style="margin-top:6px;font-size:13px;opacity:.75;">
+                    شبکه: TRC20
+                  </div>
+                  <button
+                    type="button"
+                    style="margin-top:12px;"
+                    onclick="processAdminWithdrawal(${id})"
+                  >
+                    شروع پردازش
+                  </button>
+                </div>
+              `;
+            }).join("")
+      }
+    `;
 
-          <div style="margin-top:8px;">
-            کاربر #${userId} — ${amount} ${withdrawal.currency || "USDT"}
-          </div>
+    processingListEl.innerHTML = `
+      <div class="eyebrow">PROCESSING</div>
+      ${
+        processingWithdrawals.length === 0
+          ? '<div style="margin-top:8px;opacity:.75;">برداشت در حال پردازش وجود ندارد.</div>'
+          : processingWithdrawals.map(withdrawal => {
+              const id = Number(withdrawal.id);
+              const userId = String(withdrawal.user_id || "");
+              const amount = String(withdrawal.amount || "0");
+              const address = String(withdrawal.destination_address || "");
 
-          <div style="
-            margin-top:8px;
-            word-break:break-all;
-            direction:ltr;
-            text-align:left;
-          ">
-            ${address}
-          </div>
-
-          <div style="
-            margin-top:6px;
-            font-size:13px;
-            opacity:.75;
-          ">
-            شبکه: TRC20
-          </div>
-
-          <button
-            type="button"
-            style="margin-top:12px;"
-            onclick="processAdminWithdrawal(${id})"
-          >
-            شروع پردازش
-          </button>
-        </div>
-      `;
-    }).join("");
+              return `
+                <div class="card" style="margin-top:12px;">
+                  <div><strong>برداشت #${id}</strong></div>
+                  <div style="margin-top:8px;">
+                    کاربر #${userId} — ${amount} ${withdrawal.currency || "USDT"}
+                  </div>
+                  <div style="margin-top:8px;word-break:break-all;direction:ltr;text-align:left;">
+                    ${address}
+                  </div>
+                  <div style="margin-top:6px;font-size:13px;opacity:.75;">
+                    شبکه: TRC20 — در حال پردازش
+                  </div>
+                  <button
+                    type="button"
+                    style="margin-top:12px;"
+                    onclick="buildAdminWithdrawal(${id})"
+                  >
+                    ساخت تراکنش خام
+                  </button>
+                </div>
+              `;
+            }).join("")
+      }
+    `;
 
   } catch (error) {
     console.error("ADMIN WITHDRAW PANEL ERROR:", error);
@@ -2322,15 +2353,62 @@ async function processAdminWithdrawal(transactionId) {
       return;
     }
 
-    alert(
-      "برداشت وارد مرحله پردازش شد."
-    );
-
+    alert("برداشت وارد مرحله پردازش شد.");
     await loadAdminWithdrawPanel();
 
   } catch (error) {
     console.error(
       "ADMIN WITHDRAW PROCESS ERROR:",
+      error
+    );
+
+    alert("خطا در اتصال به سرور");
+  }
+}
+
+async function buildAdminWithdrawal(transactionId) {
+  if (!confirm(
+    "آیا می‌خواهید تراکنش خام این برداشت ساخته شود؟\n\nدر این مرحله هیچ امضا یا ارسال به شبکه انجام نمی‌شود."
+  )) {
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      API + "/admin/wallet-withdraw-build",
+      {
+        method: "POST",
+        headers: {
+          ...getTelegramAuthHeaders(),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          transactionId: Number(transactionId)
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(
+      "ADMIN WITHDRAW BUILD RESPONSE:",
+      data
+    );
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "ساخت تراکنش خام انجام نشد"
+      );
+      return;
+    }
+
+    alert("تراکنش خام با موفقیت ساخته شد و در Ledger ثبت شد.");
+    await loadAdminWithdrawPanel();
+
+  } catch (error) {
+    console.error(
+      "ADMIN WITHDRAW BUILD ERROR:",
       error
     );
 

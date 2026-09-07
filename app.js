@@ -2304,6 +2304,20 @@ async function loadAdminWithdrawPanel() {
                   >
                     ساخت تراکنش خام
                   </button>
+
+                  ${
+                    withdrawal.blockchain_status === "BUILT"
+                      ? `
+                        <button
+                          type="button"
+                          style="margin-top:8px;"
+                          onclick="signAdminWithdrawal(${id})"
+                        >
+                          امضای تراکنش
+                        </button>
+                      `
+                      : ""
+                  }
                 </div>
               `;
             }).join("")
@@ -2409,6 +2423,59 @@ async function buildAdminWithdrawal(transactionId) {
   } catch (error) {
     console.error(
       "ADMIN WITHDRAW BUILD ERROR:",
+      error
+    );
+
+    alert("خطا در اتصال به سرور");
+  }
+}
+
+async function signAdminWithdrawal(transactionId) {
+  if (!confirm(
+    "آیا می‌خواهید این برداشت با کلید امن خزانه امضا شود؟\\n\\nدر این مرحله تراکنش فقط امضا می‌شود و هنوز به شبکه ارسال نمی‌شود."
+  )) {
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      API + "/admin/wallet-withdraw-sign",
+      {
+        method: "POST",
+        headers: {
+          ...getTelegramAuthHeaders(),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          transactionId: Number(transactionId)
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(
+      "ADMIN WITHDRAW SIGN RESPONSE:",
+      data
+    );
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "امضای تراکنش انجام نشد"
+      );
+      return;
+    }
+
+    alert(
+      "تراکنش با موفقیت امضا شد.\\n\\nتراکنش هنوز به شبکه ارسال نشده است."
+    );
+
+    await loadAdminWithdrawPanel();
+
+  } catch (error) {
+    console.error(
+      "ADMIN WITHDRAW SIGN ERROR:",
       error
     );
 

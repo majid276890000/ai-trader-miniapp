@@ -2205,6 +2205,13 @@ async function loadAdminWithdrawPanel() {
       </div>
     </div>
     <div id="adminWithdrawStatus">در حال بررسی برداشت‌ها...</div>
+    <button
+      type="button"
+      style="margin-top:12px;"
+      onclick="verifyAdminTronSigner()"
+    >
+      بررسی امضاکننده خزانه
+    </button>
     <div id="adminWithdrawPendingList" style="margin-top:12px;"></div>
     <div id="adminWithdrawProcessingList" style="margin-top:12px;"></div>
   `;
@@ -2480,6 +2487,48 @@ async function signAdminWithdrawal(transactionId) {
     );
 
     alert("خطا در اتصال به سرور");
+  }
+}
+
+
+async function verifyAdminTronSigner() {
+  try {
+    const res = await fetch(
+      API + "/admin/wallet-withdraw-signer-verify",
+      {
+        method: "POST",
+        headers: {
+          ...getTelegramAuthHeaders(),
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(
+      "ADMIN TRON SIGNER VERIFY RESPONSE:",
+      data
+    );
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "کلید امضاکننده با آدرس خزانه مطابقت ندارد"
+      );
+      return;
+    }
+
+    alert(
+      "تأیید شد ✅\n\nکلید خصوصی با آدرس کیف پول خزانه مطابقت دارد."
+    );
+  } catch (error) {
+    console.error(
+      "ADMIN TRON SIGNER VERIFY ERROR:",
+      error
+    );
+
+    alert("خطا در بررسی امضاکننده");
   }
 }
 

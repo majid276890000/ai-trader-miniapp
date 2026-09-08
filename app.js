@@ -2325,6 +2325,20 @@ async function loadAdminWithdrawPanel() {
                       `
                       : ""
                   }
+
+                  ${
+                    withdrawal.blockchain_status === "SIGNED"
+                      ? `
+                        <button
+                          type="button"
+                          style="margin-top:8px;"
+                          onclick="broadcastAdminWithdrawal(${id})"
+                        >
+                          ارسال تراکنش به شبکه TRON
+                        </button>
+                      `
+                      : ""
+                  }
                 </div>
               `;
             }).join("")
@@ -2490,6 +2504,61 @@ async function signAdminWithdrawal(transactionId) {
   }
 }
 
+
+
+async function broadcastAdminWithdrawal(transactionId) {
+  if (!confirm(
+    "⚠️ هشدار مهم\n\nاین مرحله تراکنش امضاشده را واقعاً به شبکه TRON ارسال می‌کند.\n\nپس از ارسال، تراکنش روی بلاکچین قابل برگشت نیست.\n\nآیا مطمئن هستید؟"
+  )) {
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      API + "/admin/wallet-withdraw-broadcast",
+      {
+        method: "POST",
+        headers: {
+          ...getTelegramAuthHeaders(),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          transactionId: Number(transactionId)
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(
+      "ADMIN WITHDRAW BROADCAST RESPONSE:",
+      data
+    );
+
+    if (!data.ok) {
+      alert(
+        data.message ||
+        "ارسال تراکنش به شبکه انجام نشد"
+      );
+      return;
+    }
+
+    alert(
+      "تراکنش با موفقیت به شبکه TRON ارسال شد.\n\nTXID:\n" +
+      data.txID
+    );
+
+    await loadAdminWithdrawPanel();
+
+  } catch (error) {
+    console.error(
+      "ADMIN WITHDRAW BROADCAST ERROR:",
+      error
+    );
+
+    alert("خطا در اتصال به سرور");
+  }
+}
 
 async function verifyAdminTronSigner() {
   try {

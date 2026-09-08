@@ -2302,15 +2302,36 @@ async function loadAdminWithdrawPanel() {
                     ${address}
                   </div>
                   <div style="margin-top:6px;font-size:13px;opacity:.75;">
-                    شبکه: TRC20 — در حال پردازش
+                    شبکه: TRC20
                   </div>
-                  <button
-                    type="button"
-                    style="margin-top:12px;"
-                    onclick="buildAdminWithdrawal(${id})"
-                  >
-                    ساخت تراکنش خام
-                  </button>
+
+                  <div style="margin-top:12px;font-size:13px;">
+                    ${
+                      withdrawal.blockchain_status === "CREATED"
+                        ? "🟡 مرحله ۱ از ۳ — آماده ساخت تراکنش"
+                        : withdrawal.blockchain_status === "BUILT"
+                        ? "🟡 مرحله ۲ از ۳ — آماده امضا"
+                        : withdrawal.blockchain_status === "SIGNED"
+                        ? "🟠 مرحله ۳ از ۳ — آماده ارسال به TRON"
+                        : withdrawal.blockchain_status === "BROADCASTED"
+                        ? "🟢 تراکنش به شبکه TRON ارسال شد"
+                        : "وضعیت: " + (withdrawal.blockchain_status || "نامشخص")
+                    }
+                  </div>
+
+                  ${
+                    withdrawal.blockchain_status === "CREATED"
+                      ? `
+                        <button
+                          type="button"
+                          style="margin-top:12px;"
+                          onclick="buildAdminWithdrawal(${id})"
+                        >
+                          ① ساخت تراکنش
+                        </button>
+                      `
+                      : ""
+                  }
 
                   ${
                     withdrawal.blockchain_status === "BUILT"
@@ -2320,7 +2341,7 @@ async function loadAdminWithdrawPanel() {
                           style="margin-top:8px;"
                           onclick="signAdminWithdrawal(${id})"
                         >
-                          امضای تراکنش
+                          ② امضای تراکنش
                         </button>
                       `
                       : ""
@@ -2334,7 +2355,7 @@ async function loadAdminWithdrawPanel() {
                           style="margin-top:8px;"
                           onclick="broadcastAdminWithdrawal(${id})"
                         >
-                          ارسال تراکنش به شبکه TRON
+                          ③ ارسال به شبکه TRON
                         </button>
                       `
                       : ""

@@ -98,7 +98,7 @@ async function startBot() {
   try {
 
     const res =
-      await fetch(API + "/start");
+      await fetch(API + "/start", { headers: getTelegramAuthHeaders() });
 
     console.log("WALLET RESPONSE", res.status, res.ok);
 
@@ -139,7 +139,7 @@ async function stopBot() {
   try {
 
     const res =
-      await fetch(API + "/stop");
+      await fetch(API + "/stop", { headers: getTelegramAuthHeaders() });
 
     const data =
       await res.json();

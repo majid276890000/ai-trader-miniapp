@@ -2628,3 +2628,53 @@ setTimeout(() => {
   loadAdminWithdrawPanel();
 }, 1200);
 
+
+/* =========================
+   BOTTOM NAVIGATION
+   ========================= */
+
+function showAppPage(page) {
+  const sections = document.querySelectorAll(".page-section");
+
+  sections.forEach((section) => {
+    section.style.display =
+      section.classList.contains("page-" + page) ? "" : "none";
+  });
+
+  document.querySelectorAll(".bottom-nav-item").forEach((item) => {
+    item.classList.toggle(
+      "active",
+      item.dataset.page === page
+    );
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".bottom-nav-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      showAppPage(item.dataset.page);
+    });
+  });
+
+  showAppPage("home");
+});
+
+
+/* =========================
+   5-SECOND SPLASH SCREEN
+   ========================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const splash = document.getElementById("appSplash");
+
+  if (!splash) return;
+
+  setTimeout(() => {
+    splash.classList.add("splash-hide");
+
+    setTimeout(() => {
+      splash.remove();
+    }, 500);
+  }, 4500);
+});
+

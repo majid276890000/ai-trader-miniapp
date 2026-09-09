@@ -14,7 +14,11 @@
 
 <body>
 
-  <div class="app">
+  <div id="appSplash" class="app-splash">
+  <img src="ai-trader-splash.png" alt="AI-Trader">
+</div>
+
+<div class="app">
 
     <!-- HEADER -->
     <header class="header">
@@ -38,7 +42,7 @@
 
 
     <!-- TOTAL BALANCE -->
-    <section class="card balance-card">
+    <section class="card balance-card page-section page-home">
 
       <div class="card-label">
         موجودی کل
@@ -80,7 +84,7 @@
 
 
     <!-- AI SIGNAL -->
-    <section class="card signal-card">
+    <section class="card signal-card page-section page-home">
 
       <div class="section-heading">
 
@@ -133,7 +137,7 @@
 
 
     <!-- BOT STATUS -->
-    <section class="card status-card">
+    <section class="card status-card page-section page-home">
 
       <div class="section-title">
         وضعیت ربات
@@ -168,7 +172,7 @@
 
 
     <!-- AUTO TRADE -->
-    <section class="card auto-trade-card">
+    <section class="card auto-trade-card page-section page-trade">
 
       <div class="auto-trade-header">
 
@@ -204,7 +208,7 @@
 
 
     <!-- WALLET -->
-    <section class="card wallet-card">
+    <section class="card wallet-card page-section page-wallet">
 
       <div class="section-title">
         کیف پول
@@ -246,7 +250,7 @@
 
 
     <!-- TRADES -->
-    <section class="card trade-history-card">
+    <section class="card trade-history-card page-section page-trade">
 
       <div class="section-heading">
 
@@ -279,7 +283,7 @@
 
 
     <!-- PAPER TRADING -->
-    <section class="card paper-card">
+    <section class="card paper-card page-section page-trade">
 
       <div class="section-title">
         معامله آزمایشی
@@ -305,6 +309,56 @@
         <div>
           <span>سود / زیان</span>
           <strong id="paperProfit">0 USDT</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section class="card settings-card page-section page-settings">
+
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">AI-TRADER</div>
+          <h2>تنظیمات</h2>
+        </div>
+        <span class="settings-icon">⚙</span>
+      </div>
+
+      <div class="settings-list">
+
+        <div class="settings-item">
+          <div>
+            <strong>حالت معامله</strong>
+            <small>مدیریت نحوه اجرای معاملات ربات</small>
+          </div>
+          <span class="settings-value">کم‌ریسک</span>
+        </div>
+
+        <div class="settings-item">
+          <div>
+            <strong>سرمایه معاملاتی</strong>
+            <small>سرمایه مورد استفاده ربات</small>
+          </div>
+          <span class="settings-value">قابل تنظیم</span>
+        </div>
+
+        <div class="settings-item">
+          <div>
+            <strong>اتصال صرافی</strong>
+            <small>اتصال API برای معاملات واقعی</small>
+          </div>
+          <span class="settings-value">غیرفعال</span>
+        </div>
+
+        <div class="settings-item">
+          <div>
+            <strong>نسخه برنامه</strong>
+            <small>AI-Trader Mini App</small>
+          </div>
+          <span class="settings-value">1.0</span>
         </div>
 
       </div>
@@ -686,6 +740,29 @@
       style="margin-top:12px;"
     ></div>
   </section>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button type="button" class="bottom-nav-item active" data-page="home">
+      <span class="bottom-nav-icon">⌂</span>
+      <span>خانه</span>
+    </button>
+
+    <button type="button" class="bottom-nav-item" data-page="trade">
+      <span class="bottom-nav-icon">↗</span>
+      <span>معامله</span>
+    </button>
+
+    <button type="button" class="bottom-nav-item" data-page="wallet">
+      <span class="bottom-nav-icon">◈</span>
+      <span>کیف پول</span>
+    </button>
+
+    <button type="button" class="bottom-nav-item" data-page="settings">
+      <span class="bottom-nav-icon">⚙</span>
+      <span>تنظیمات</span>
+    </button>
+  </nav>
 
   <script src="app.js?v=20260907"></script>
 

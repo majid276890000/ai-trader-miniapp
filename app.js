@@ -1705,6 +1705,11 @@ async function getTradeHistory() {
     const trades =
       data.trades || [];
 
+    setText(
+      "todayProfit",
+      Number(data.todayProfit ?? 0).toFixed(2) + " USDT"
+    );
+
     if (trades.length === 0) {
       box.innerHTML =
         "<p>هنوز معامله‌ای ثبت نشده است.</p>";

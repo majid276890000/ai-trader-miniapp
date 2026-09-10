@@ -262,163 +262,6 @@ async function getAnalysis() {
 }
 
 // =========================
-// Paper Trading
-// =========================
-async function getPaperStatus() {
-
-  try {
-
-    const res =
-      await fetch(
-        API + "/paper-status"
-      );
-
-    const data =
-      await res.json();
-
-    const position =
-      Number(data.position) || 0;
-
-    const entry =
-      Number(data.entryPrice) || 0;
-
-    const profit =
-      Number(data.profit) || 0;
-
-    setText(
-      "paperPosition",
-      position > 0
-        ? position.toFixed(8) +
-          " BTC"
-        : "0 BTC"
-    );
-
-    setText(
-      "paperEntryPrice",
-      entry > 0
-        ? entry.toFixed(2) +
-          " USDT"
-        : "0 USDT"
-    );
-
-    setText(
-      "paperProfit",
-      profit.toFixed(2) +
-      " USDT"
-    );
-
-    setText(
-      "paperStatus",
-      position > 0
-        ? "🟢 معامله باز"
-        : "⚪ بدون معامله"
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Paper Status Error:",
-      error
-    );
-  }
-}
-
-// =========================
-// Paper Buy
-// =========================
-async function paperBuy() {
-
-  try {
-
-    const res =
-      await fetch(
-        API + "/paper-buy"
-      );
-
-    const data =
-      await res.json();
-
-    console.log("AUTO TRADE ON/OFF RESPONSE:", data);
-    const debugStatus =
-      document.getElementById("autoTradeStatus");
-
-    if (debugStatus) {
-      debugStatus.textContent =
-        "DEBUG: " + JSON.stringify(data);
-    }
-
-    console.log(
-      "AUTO TRADE RESPONSE:",
-      data
-    );
-
-    if (!data.ok) {
-
-      alert(
-        data.message ||
-        "خرید انجام نشد"
-      );
-
-      return;
-    }
-
-    await getPaperStatus();
-    await getStatus();
-
-  } catch (error) {
-
-    console.error(
-      "Paper Buy Error:",
-      error
-    );
-
-    alert(
-      "خطا در خرید آزمایشی"
-    );
-  }
-}
-
-// =========================
-// Paper Sell
-// =========================
-async function paperSell() {
-
-  try {
-
-    const res =
-      await fetch(
-        API + "/paper-sell"
-      );
-
-    const data =
-      await res.json();
-
-    if (!data.ok) {
-
-      alert(
-        data.message ||
-        "فروش انجام نشد"
-      );
-
-      return;
-    }
-
-    await getPaperStatus();
-    await getStatus();
-
-  } catch (error) {
-
-    console.error(
-      "Paper Sell Error:",
-      error
-    );
-
-    alert(
-      "خطا در فروش آزمایشی"
-    );
-  }
-}
-
 // =========================
 // USDT / Toman Rate
 // =========================
@@ -1498,7 +1341,6 @@ async function initApp() {
   await getBTCPrice();
   await getAnalysis();
 
-  await getPaperStatus();
 
   await getWalletStatus();
   await getWalletTransactions();
@@ -1524,10 +1366,6 @@ setInterval(
   15000
 );
 
-setInterval(
-  getPaperStatus,
-  15000
-);
 
 setInterval(
   getWalletStatus,
@@ -1581,7 +1419,7 @@ async function tradeBuy(amount) {
     }
 
     alert(
-      "خرید واقعی با موفقیت انجام شد\n" +
+      "خرید با موفقیت ثبت شد\n" +
       "مبلغ: " +
       Number(data.trade.amount)
         .toFixed(2) +
@@ -1598,7 +1436,7 @@ async function tradeBuy(amount) {
     );
 
     alert(
-      "خطا در خرید واقعی"
+      "خطا در ثبت خرید"
     );
   }
 }
@@ -1644,7 +1482,7 @@ async function tradeSell() {
     }
 
     alert(
-      "فروش واقعی با موفقیت انجام شد\n" +
+      "فروش با موفقیت ثبت شد\n" +
       "سود/زیان: " +
       Number(data.profit ?? 0)
         .toFixed(2) +
@@ -1661,7 +1499,7 @@ async function tradeSell() {
     );
 
     alert(
-      "خطا در فروش واقعی"
+      "خطا در ثبت فروش"
     );
   }
 }

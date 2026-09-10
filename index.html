@@ -307,12 +307,12 @@
 
       <div class="settings-list">
 
-        <div class="settings-item">
+        <div class="settings-item" onclick="openTradingModeModal()">
           <div>
             <strong>حالت معامله</strong>
             <small>مدیریت نحوه اجرای معاملات ربات</small>
           </div>
-          <span class="settings-value">کم‌ریسک</span>
+          <span id="tradingModeValue" class="settings-value">کم‌ریسک</span>
         </div>
 
         <div class="settings-item">
@@ -743,6 +743,21 @@
   </nav>
 
   <script src="app.js?v=20260907"></script>
+
+  <div id="tradingModeModal" class="withdraw-modal" style="display:none;">
+    <div class="withdraw-modal-content">
+      <div class="withdraw-modal-header">
+        <strong>حالت معامله</strong>
+        <button type="button" onclick="closeTradingModeModal()">×</button>
+      </div>
+      <div style="padding:16px;">
+        <p style="margin-top:0;">نحوه اجرای معاملات ربات را انتخاب کنید:</p>
+        <button type="button" onclick="selectTradingMode('LOW')" style="width:100%;margin:6px 0;">کم‌ریسک</button>
+        <button type="button" onclick="selectTradingMode('MEDIUM')" style="width:100%;margin:6px 0;">متوسط</button>
+        <button type="button" onclick="selectTradingMode('HIGH')" style="width:100%;margin:6px 0;">پرریسک</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 

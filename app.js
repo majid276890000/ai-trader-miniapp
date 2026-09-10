@@ -1336,11 +1336,68 @@ async function getWalletTransactions() {
 // =========================
 // Initial Load
 // =========================
+function openTradingModeModal() {
+  const modal = document.getElementById("tradingModeModal");
+  if (modal) modal.style.display = "flex";
+}
+
+function closeTradingModeModal() {
+  const modal = document.getElementById("tradingModeModal");
+  if (modal) modal.style.display = "none";
+}
+
+async function loadTradingMode() {
+  try {
+    const res = await fetch(API + "/trading-mode", {
+      headers: getTelegramAuthHeaders()
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      const labels = {
+        LOW: "کم‌ریسک",
+        MEDIUM: "متوسط",
+        HIGH: "پرریسک"
+      };
+      setText("tradingModeValue", labels[data.mode] || "کم‌ریسک");
+    }
+  } catch (error) {
+    console.error("Trading Mode Load Error:", error);
+  }
+}
+
+async function selectTradingMode(mode) {
+  try {
+    const res = await fetch(API + "/trading-mode?mode=" + encodeURIComponent(mode), {
+      headers: getTelegramAuthHeaders()
+    });
+    const data = await res.json();
+
+    if (!data.ok) {
+      alert(data.message || "خطا در تغییر حالت معامله");
+      return;
+    }
+
+    const labels = {
+      LOW: "کم‌ریسک",
+      MEDIUM: "متوسط",
+      HIGH: "پرریسک"
+    };
+
+    setText("tradingModeValue", labels[data.mode] || "کم‌ریسک");
+    closeTradingModeModal();
+  } catch (error) {
+    console.error("Trading Mode Save Error:", error);
+    alert("خطا در ذخیره حالت معامله");
+  }
+}
+
 async function initApp() {
 
   await getStatus();
   await getBTCPrice();
   await getAnalysis();
+  await loadTradingMode();
 
 
   await getWalletStatus();

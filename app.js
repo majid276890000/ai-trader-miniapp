@@ -2142,6 +2142,7 @@ async function loadAdminWithdrawPanel() {
                   </div>
 
                   <div style="margin-top:12px;font-size:13px;">
+                  <button type="button" style="margin-top:12px;" onclick="failAdminWithdrawal(${id})">رد برداشت و آزادسازی موجودی</button>
                     ${
                       withdrawal.blockchain_status === "CREATED"
                         ? "🟡 مرحله ۱ از ۳ — آماده ساخت تراکنش"
@@ -2205,6 +2206,26 @@ async function loadAdminWithdrawPanel() {
   } catch (error) {
     console.error("ADMIN WITHDRAW PANEL ERROR:", error);
     section.innerHTML = "";
+  }
+}
+
+async function failAdminWithdrawal(transactionId) {
+  const reason = prompt("دلیل رد برداشت را وارد کنید:");
+  if (!reason || !reason.trim()) return;
+  if (!confirm("این برداشت FAILED می‌شود و مبلغ قفل‌شده به موجودی قابل استفاده برمی‌گردد.\n\nادامه می‌دهید؟")) return;
+  try {
+    const res = await fetch(API + "/admin/wallet-withdraw-fail", {
+      method: "POST",
+      headers: { ...getTelegramAuthHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ transactionId: Number(transactionId), errorMessage: reason.trim() })
+    });
+    const data = await res.json();
+    if (!data.ok) { alert(data.message || "رد برداشت انجام نشد"); return; }
+    alert("برداشت رد شد و موجودی قفل‌شده آزاد شد.");
+    await loadAdminWithdrawPanel();
+  } catch (error) {
+    console.error("ADMIN WITHDRAW FAIL ERROR:", error);
+    alert("خطا در اتصال به سرور");
   }
 }
 

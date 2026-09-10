@@ -12,6 +12,7 @@ if (tg) {
 function getTelegramInitData() {
   return tg?.initData || "";
 }
+console.log("TELEGRAM INIT DATA LENGTH:", getTelegramInitData().length);
 
 function getTelegramAuthHeaders() {
   const initData = getTelegramInitData();

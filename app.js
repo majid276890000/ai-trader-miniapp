@@ -1346,6 +1346,80 @@ function closeTradingModeModal() {
   if (modal) modal.style.display = "none";
 }
 
+function openTradingCapitalModal() {
+  const modal = document.getElementById("tradingCapitalModal");
+  if (modal) modal.style.display = "flex";
+}
+
+function closeTradingCapitalModal() {
+  const modal = document.getElementById("tradingCapitalModal");
+  if (modal) modal.style.display = "none";
+}
+
+async function loadTradingCapital() {
+  try {
+    const res = await fetch(API + "/trading-capital", {
+      headers: getTelegramAuthHeaders()
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      setText(
+        "tradingCapitalValue",
+        Number(data.amount).toFixed(2) + " USDT"
+      );
+
+      const input = document.getElementById("tradingCapitalInput");
+      if (input) input.value = Number(data.amount);
+    }
+  } catch (error) {
+    console.error("Trading Capital Load Error:", error);
+  }
+}
+
+async function saveTradingCapital() {
+  const input = document.getElementById("tradingCapitalInput");
+
+  if (!input) {
+    alert("فیلد سرمایه معاملاتی پیدا نشد");
+    return;
+  }
+
+  const amount = Number(input.value);
+
+  if (!Number.isFinite(amount) || amount < 2 || amount > 1000) {
+    alert("سرمایه معاملاتی باید بین 2 تا 1000 USDT باشد");
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      API + "/trading-capital?amount=" + encodeURIComponent(amount),
+      {
+        headers: getTelegramAuthHeaders()
+      }
+    );
+
+    const data = await res.json();
+
+    if (!data.ok) {
+      alert(data.message || "خطا در ذخیره سرمایه معاملاتی");
+      return;
+    }
+
+    setText(
+      "tradingCapitalValue",
+      Number(data.amount).toFixed(2) + " USDT"
+    );
+
+    closeTradingCapitalModal();
+
+  } catch (error) {
+    console.error("Trading Capital Save Error:", error);
+    alert("خطا در ذخیره سرمایه معاملاتی");
+  }
+}
+
 async function loadTradingMode() {
   try {
     const res = await fetch(API + "/trading-mode", {
@@ -1398,6 +1472,7 @@ async function initApp() {
   await getBTCPrice();
   await getAnalysis();
   await loadTradingMode();
+  await loadTradingCapital();
 
 
   await getWalletStatus();

@@ -315,12 +315,12 @@
           <span id="tradingModeValue" class="settings-value">کم‌ریسک</span>
         </div>
 
-        <div class="settings-item">
+        <div class="settings-item" onclick="openTradingCapitalModal()">
           <div>
             <strong>سرمایه معاملاتی</strong>
             <small>سرمایه مورد استفاده ربات</small>
           </div>
-          <span class="settings-value">در حال توسعه</span>
+          <span id="tradingCapitalValue" class="settings-value">2 USDT</span>
         </div>
 
         <div class="settings-item">
@@ -755,6 +755,33 @@
         <button type="button" onclick="selectTradingMode('LOW')" style="width:100%;margin:6px 0;">کم‌ریسک</button>
         <button type="button" onclick="selectTradingMode('MEDIUM')" style="width:100%;margin:6px 0;">متوسط</button>
         <button type="button" onclick="selectTradingMode('HIGH')" style="width:100%;margin:6px 0;">پرریسک</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tradingCapitalModal" class="withdraw-modal" style="display:none;">
+    <div class="withdraw-modal-content">
+      <div class="withdraw-modal-header">
+        <strong>سرمایه معاملاتی</strong>
+        <button type="button" onclick="closeTradingCapitalModal()">×</button>
+      </div>
+      <div style="padding:16px;">
+        <p style="margin-top:0;">مقدار سرمایه مورد استفاده ربات را به USDT وارد کنید:</p>
+        <input
+          id="tradingCapitalInput"
+          type="number"
+          min="2"
+          max="1000"
+          step="0.01"
+          placeholder="مثلاً 10"
+          style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0;"
+        >
+        <small>حداقل 2 و حداکثر 1000 USDT</small>
+        <button
+          type="button"
+          onclick="saveTradingCapital()"
+          style="width:100%;margin-top:14px;"
+        >ذخیره</button>
       </div>
     </div>
   </div>

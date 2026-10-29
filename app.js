@@ -32,7 +32,7 @@ console.log(
   getTelegramUser()
 );
 
-const API = "https://ai-trader-backend-xfyg.onrender.com";
+const API = "https://ai-trader-backend-1-n7yv.onrender.com";
 
 // =========================
 // Helper

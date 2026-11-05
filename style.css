@@ -1003,3 +1003,56 @@ footer small {
 .auto-trade-stat:last-child strong {
   color: var(--gold);
 }
+
+/* Chain wallet connection */
+.chain-wallet-connection {
+  margin: 18px 0;
+  padding: 14px;
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 14px;
+}
+
+.chain-wallet-connection h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.chain-wallet-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.chain-wallet-row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.chain-wallet-row small {
+  overflow-wrap: anywhere;
+  opacity: 0.75;
+  direction: ltr;
+  text-align: right;
+}
+
+.chain-wallet-row button {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.chain-wallet-row button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+#chainWalletStatus {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}

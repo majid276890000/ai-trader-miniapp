@@ -226,6 +226,23 @@
         کیف پول
       </div>
 
+      <!-- CHAIN WALLET CONNECTION -->
+      <div class="chain-wallet-connection">
+        <h3>اتصال کیف پول‌ها</h3>
+
+    <div class="chain-wallet-row">
+          <div>
+            <strong>شبکه TRON</strong>
+            <small id="tronWalletAddress">کیف پول متصل نیست</small>
+          </div>
+          <button type="button" id="connectTronWalletBtn">اتصال TRON</button>
+        </div>
+        <p id="tronUsdtBalance">موجودی USDT در TRON: ـ</p>
+        <p id="tronWalletStatus" role="status" aria-live="polite">وضعیت TRON: متصل نیست</p>
+
+      </div>
+      <!-- END CHAIN WALLET CONNECTION -->
+
       <div class="wallet-actions">
 
         <button onclick="walletDeposit()">
@@ -303,6 +320,37 @@
           <h2>تنظیمات</h2>
         </div>
         <span class="settings-icon">⚙</span>
+      </div>
+
+      <div class="card subscription-card" style="margin:16px 0;padding:16px;">
+        <h3>اشتراک AI-Trader</h3>
+        <p>اشتراک ۹۰ روزه — ۱۵ USDT</p>
+        <p>شبکه پرداخت: TRON (TRC20)</p>
+        <label>آدرس مقصد پرداخت ۱۵ تتر:</label>
+        <div id="subscriptionTreasuryAddress" dir="ltr">در حال دریافت آدرس...</div>
+        <button type="button" id="copySubscriptionAddress">کپی آدرس پرداخت</button>
+        <div id="subscriptionStatus">در حال بررسی اشتراک...</div>
+        <label for="subscriptionTxid">شناسه تراکنش TXID</label>
+        <input id="subscriptionTxid" type="text"
+          placeholder="TXID تراکنش را وارد کنید"
+          autocomplete="off" style="width:100%;margin:10px 0;">
+        <button type="button" id="submitSubscriptionPayment">
+          ثبت پرداخت اشتراک
+        </button>
+      </div>
+
+      <div class="settings-item" style="margin:16px 0;">
+        <div>
+          <strong>زبان برنامه</strong>
+          <small>انتخاب زبان نمایش برنامه</small>
+        </div>
+        <select id="appLanguage" aria-label="زبان برنامه">
+          <option value="fa">فارسی</option>
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
+          <option value="ru">Русский</option>
+          <option value="tr">Türkçe</option>
+        </select>
       </div>
 
       <div class="settings-list">
@@ -696,7 +744,11 @@
 
   </div>
 
-  <!-- ADMIN TRON ADDRESS PANEL -->
+  <button id="adminPanelToggleBtn" type="button"
+  style="display:none; margin-top:16px;"
+  onclick="toggleAdminPanel()">ورود مدیر</button>
+
+<!-- ADMIN TRON ADDRESS PANEL -->
   <section
     id="adminTronPanel"
     class="card"
@@ -742,7 +794,7 @@
     </button>
   </nav>
 
-  <script src="app.js?v=20260907"></script>
+  <script src="app.js?v=20261103"></script>
 
   <div id="tradingModeModal" class="withdraw-modal" style="display:none;">
     <div class="withdraw-modal-content">
@@ -786,6 +838,7 @@
     </div>
   </div>
 
+  <script type="module" src="./wallet-connect/assets/index-C7T5UNoW.js"></script>
 </body>
 
 </html>

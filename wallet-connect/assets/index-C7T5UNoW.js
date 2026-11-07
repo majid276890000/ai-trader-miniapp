@@ -13,7 +13,7 @@ async function tronAuthRequest(path,options={}){
  return data
 }
 function openTronAuthAction(data,stage){
- if(!data?.actionId||!data?.callbackUrl)throw Error("Invalid TronLink action at "+stage+": actionId="+!!data?.actionId+", callbackUrl="+!!data?.callbackUrl);
+ if(!data?.actionId||!data?.callbackUrl)throw Error("Invalid TronLink action at "+stage+": actionId="+!!data?.actionId+", callbackUrl="+!!data?.callbackUrl+", fields="+Object.keys(data||{}).join(","));
  sessionStorage.setItem("aiTraderTronAuth",JSON.stringify({actionId:data.actionId,stage}));
  let params={...data,dappName:"AI-Trader"};
  let bridge="https://majid276890000.github.io/ai-trader-miniapp/tronlink-bridge.html#"+encodeURIComponent(JSON.stringify(params));

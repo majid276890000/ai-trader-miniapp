@@ -82,7 +82,7 @@ async function startSecureTronAuth(){
   sessionStorage.removeItem("aiTraderTronAuth");
   await Q();
  }catch(error){
-  q.textContent="احراز هویت ناموفق بود؛ دوباره تلاش کن.";
+  q.textContent="خطای احراز هویت: "+String(error?.message||"نامشخص").slice(0,140);
  }finally{
   J.disabled=false
  }

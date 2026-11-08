@@ -4,7 +4,7 @@ function xe(e){let t=BigInt(e.toString()),n=10n**BigInt(Y);return`${t/n}.${(t%n)
 async function tronAuthRequest(path,options={}){
  let initData=window.Telegram?.WebApp?.initData||"";
  if(!initData)throw Error("Telegram authentication unavailable");
- let response=await fetch("https://ai-trader-backend-1-n7yv.onrender.com"+path,{
+ let response=await fetch("https://ai-trader-backend-xfyg.onrender.com"+path,{
   ...options,
   headers:{"Content-Type":"application/json","X-Telegram-Init-Data":initData,...(options.headers||{})}
  });

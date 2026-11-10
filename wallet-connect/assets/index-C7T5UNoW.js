@@ -61,30 +61,48 @@ async function Q(){
   q.textContent="برای بررسی وضعیت، مینی‌اپ را داخل تلگرام باز کن."
  }
 }
+let pendingTronSign=null;
 async function startSecureTronAuth(){
  if(!J)return;
+ let savedSign=pendingTronSign;
+ if(!savedSign){
+  try{
+   let saved=JSON.parse(sessionStorage.getItem("aiTraderTronAuth")||"null");
+   if(saved?.stage==="SIGN"&&saved.data)savedSign=saved.data;
+  }catch{}
+ }
  J.disabled=true;
- q.textContent="در حال شروع احراز هویت امن...";
  try{
+  if(savedSign){
+   openTronAuthAction(savedSign,"SIGN");
+   pendingTronSign=null;
+   q.textContent="لطفاً پیام امنیتی را در TronLink امضا کن...";
+   await waitTronAuth(savedSign.actionId,"VERIFIED");
+   sessionStorage.removeItem("aiTraderTronAuth");
+   J.textContent="اتصال TRON";
+   await Q();
+   return;
+  }
+  J.textContent="اتصال TRON";
   localStorage.removeItem(X);
   let login=await tronAuthRequest("/tronlink-auth/start",{method:"POST",body:"{}"});
   openTronAuthAction(login,"LOGIN");
   q.textContent="در انتظار تأیید اتصال در TronLink...";
   await waitTronAuth(login.actionId,"LOGIN_OK");
-
   q.textContent="اتصال انجام شد؛ درخواست امضای پیام...";
   let sign=await tronAuthRequest("/tronlink-auth/sign",{
    method:"POST",body:JSON.stringify({actionId:login.actionId})
   });
-  openTronAuthAction(sign,"SIGN");
-  q.textContent="لطفاً پیام امنیتی را در TronLink امضا کن...";
-  await waitTronAuth(sign.actionId,"VERIFIED");
-  sessionStorage.removeItem("aiTraderTronAuth");
-  await Q();
+  pendingTronSign=sign;
+  sessionStorage.setItem("aiTraderTronAuth",JSON.stringify({
+   actionId:sign.actionId,stage:"SIGN",data:sign
+  }));
+  J.textContent="ادامه و امضای پیام";
+  q.textContent="اتصال انجام شد؛ برای امضای پیام، دکمه ادامه را بزن.";
  }catch(error){
   q.textContent="خطای احراز هویت: "+String(error?.message||"نامشخص").slice(0,140);
  }finally{
-  J.disabled=false
+  J.disabled=false;
  }
 }
 J&&J.addEventListener("click",startSecureTronAuth);
@@ -97,20 +115,32 @@ async function resumeSecureTronAuth(){
  let pending;
  try{pending=JSON.parse(raw)}catch{return}
  if(!pending?.actionId||!["LOGIN","SIGN"].includes(pending.stage))return;
+
+ if(pending.stage==="SIGN"&&pending.data){
+  pendingTronSign=pending.data;
+  if(J)J.textContent="ادامه و امضای پیام";
+  q.textContent="برای امضای پیام امنیتی، دکمه ادامه را بزن.";
+  return;
+ }
+
  if(J)J.disabled=true;
  try{
   if(pending.stage==="LOGIN"){
    await waitTronAuth(pending.actionId,"LOGIN_OK");
-   q.textContent="اتصال انجام شد؛ درخواست امضای پیام...";
    let sign=await tronAuthRequest("/tronlink-auth/sign",{
     method:"POST",body:JSON.stringify({actionId:pending.actionId})
    });
-   openTronAuthAction(sign,"SIGN");
-   q.textContent="لطفاً پیام امنیتی را در TronLink امضا کن...";
+   pendingTronSign=sign;
+   sessionStorage.setItem("aiTraderTronAuth",JSON.stringify({
+    actionId:sign.actionId,stage:"SIGN",data:sign
+   }));
+   if(J)J.textContent="ادامه و امضای پیام";
+   q.textContent="اتصال انجام شد؛ برای امضای پیام، دکمه ادامه را بزن.";
    return;
   }
   await waitTronAuth(pending.actionId,"VERIFIED");
   sessionStorage.removeItem("aiTraderTronAuth");
+  if(J)J.textContent="اتصال TRON";
   await Q();
  }catch(error){
   q.textContent="ادامه احراز هویت ناموفق بود؛ دوباره صفحه را باز کن.";

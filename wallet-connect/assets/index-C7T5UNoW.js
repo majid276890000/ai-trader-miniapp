@@ -43,17 +43,10 @@ async function Q(){
   }
   G.textContent=data.address;
   G.title=data.address;
-  K.textContent="موجودی USDT در TRON: ـ";
+  K.textContent="موجودی USDT در TRON: "+(data.usdtBalance==null?"ـ":data.usdtBalance);
   q.textContent=data.addressStatus==="APPROVED"
    ?"آدرس TRON تأیید شده است."
    :"آدرس ثبت شده؛ در انتظار تأیید مدیر.";
-  let t=window.tronWeb||window.tronLink?.tronWeb;
-  if(t?.defaultAddress?.base58===data.address){
-   try{
-    if((await Z.network()).chainId==="0x2b6653dc")
-     K.textContent="موجودی USDT در TRON: "+xe(await(await t.contract().at(ye)).balanceOf(data.address).call())
-   }catch{}
-  }
  }catch{
   G.textContent="کیف پول متصل نیست";
   G.title="";

@@ -2194,10 +2194,12 @@ async function loadAdminTronPanel() {
       error
     );
 
-    adminPanelAuthorized = false;
     panel.style.display = "none";
     const btn = document.getElementById("adminPanelToggleBtn");
-    if (btn) btn.style.display = "none";
+    if (btn && adminPanelAuthorized) {
+      btn.style.display = "block";
+      btn.textContent = "ورود مدیر";
+    }
   }
 }
 

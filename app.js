@@ -3027,7 +3027,7 @@ async function loadSubscriptionStatus() {
   const addressEl = document.getElementById("subscriptionTreasuryAddress");
 
   try {
-    const response = await fetch(`${API}/subscription-status`, {
+    const response = await fetch(`${API}/subscription/status`, {
       method: "GET",
       headers: getTelegramAuthHeaders()
     });
@@ -3086,7 +3086,7 @@ document.getElementById("submitSubscriptionPayment")?.addEventListener("click", 
   if (statusEl) statusEl.textContent = "در حال بررسی تراکنش روی شبکه TRON...";
 
   try {
-    const response = await fetch(`${API}/subscription-payment`, {
+    const response = await fetch(`${API}/subscription/pay-tron`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

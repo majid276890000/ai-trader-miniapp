@@ -2110,8 +2110,6 @@ async function loadAdminTronPanel() {
         "درخواست در انتظار تأیید وجود ندارد.";
 
       listEl.innerHTML = "";
-
-      return;
     }
 
     statusEl.textContent =
@@ -2185,6 +2183,9 @@ async function loadAdminTronPanel() {
           </div>
         `;
       }).join("");
+
+    await loadAdminWithdrawPanel();
+    await loadAdminSubscriptionPanel();
 
   } catch (error) {
 
@@ -2561,6 +2562,143 @@ async function loadAdminWithdrawPanel() {
   }
 }
 
+
+async function loadAdminSubscriptionPanel() {
+  if (!adminPanelAuthorized) return;
+
+  const panel = document.getElementById("adminTronPanel");
+  if (!panel) return;
+
+  let section = document.getElementById("adminSubscriptionPanel");
+  if (!section) {
+    section = document.createElement("div");
+    section.id = "adminSubscriptionPanel";
+    section.style.marginTop = "20px";
+    panel.appendChild(section);
+  }
+
+  section.innerHTML = `
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">SUBSCRIPTIONS</div>
+        <h2>مدیریت اشتراک‌ها</h2>
+      </div>
+    </div>
+    <div id="adminSubscriptionStatus">در حال دریافت درخواست‌ها...</div>
+    <div id="adminSubscriptionList" style="margin-top:12px;"></div>
+  `;
+
+  const safe = value => String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[ch]);
+
+  try {
+    const response = await fetch(API + "/admin/subscriptions-pending", {
+      headers: getTelegramAuthHeaders()
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.message || "دریافت درخواست‌های اشتراک ناموفق بود");
+    }
+
+    const subscriptions = data.subscriptions || [];
+    document.getElementById("adminSubscriptionStatus").textContent =
+      subscriptions.length + " درخواست اشتراک در انتظار بررسی";
+
+    document.getElementById("adminSubscriptionList").innerHTML =
+      subscriptions.length === 0
+        ? '<div style="margin-top:8px;opacity:.75;">درخواست اشتراک در انتظار وجود ندارد.</div>'
+        : subscriptions.map(item => {
+            const id = Number(item.id);
+            if (!Number.isSafeInteger(id) || id <= 0) return "";
+
+            return `
+              <div class="card" style="margin-top:12px;">
+                <div><strong>اشتراک #${id}</strong></div>
+                <div style="margin-top:8px;">کاربر #${safe(item.user_id)}</div>
+                <div style="margin-top:6px;">
+                  مبلغ: ${safe(item.amount)} ${safe(item.currency || "USDT")}
+                </div>
+                <div style="margin-top:6px;">
+                  شبکه: ${safe(item.network || "TRC20")}
+                </div>
+                <div style="margin-top:6px;">
+                  مدت: ${safe(item.duration_days)} روز
+                </div>
+                <div style="margin-top:8px;direction:ltr;text-align:left;word-break:break-all;">
+                  TXID: ${safe(item.txid || "ثبت نشده")}
+                </div>
+                <div style="margin-top:8px;direction:ltr;text-align:left;word-break:break-all;">
+                  آدرس پرداخت‌کننده: ${safe(item.payer_address || "ثبت نشده")}
+                </div>
+                <div style="margin-top:8px;font-size:13px;opacity:.75;">
+                  تاریخ ثبت: ${safe(item.created_at || "نامشخص")}
+                </div>
+                <button type="button" style="margin-top:12px;"
+                  onclick="reviewAdminSubscription(${id}, 'approve')">
+                  تأیید اشتراک
+                </button>
+                <button type="button" style="margin-top:8px;"
+                  onclick="reviewAdminSubscription(${id}, 'reject')">
+                  رد اشتراک
+                </button>
+              </div>
+            `;
+          }).join("");
+
+  } catch (error) {
+    console.error("ADMIN SUBSCRIPTION PANEL ERROR:", error);
+    const status = document.getElementById("adminSubscriptionStatus");
+    if (status) status.textContent = error.message || "خطا در دریافت اشتراک‌ها";
+  }
+}
+
+async function reviewAdminSubscription(subscriptionId, action) {
+  if (!adminPanelAuthorized) return;
+  if (!["approve", "reject"].includes(action)) return;
+
+  const id = Number(subscriptionId);
+  if (!Number.isSafeInteger(id) || id <= 0) return;
+
+  const message = action === "approve"
+    ? "آیا اشتراک این کاربر را تأیید می‌کنی؟"
+    : "آیا درخواست اشتراک این کاربر رد شود؟";
+
+  if (!confirm(message)) return;
+
+  try {
+    const response = await fetch(
+      API + "/admin/subscription-" + action,
+      {
+        method: "POST",
+        headers: {
+          ...getTelegramAuthHeaders(),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ subscriptionId: id })
+      }
+    );
+
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      alert(data.message || "ثبت نتیجه بررسی ناموفق بود.");
+      return;
+    }
+
+    alert(action === "approve"
+      ? "اشتراک با موفقیت تأیید شد."
+      : "درخواست اشتراک رد شد.");
+
+    await loadAdminSubscriptionPanel();
+
+  } catch (error) {
+    console.error("ADMIN SUBSCRIPTION REVIEW ERROR:", error);
+    alert("خطا در ارتباط با سرور.");
+  }
+}
+
 async function completeAdminFiatWithdrawal(transactionId) {
   const confirmed = confirm(
     "آیا وجه این درخواست را واقعاً به شبای ثبت‌شده واریز کرده‌اید؟\n\n" +
@@ -2900,7 +3038,6 @@ async function verifyAdminTronSigner() {
 /* Load admin panel */
 setTimeout(() => {
   loadAdminTronPanel();
-  loadAdminWithdrawPanel();
 }, 1200);
 
 

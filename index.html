@@ -371,12 +371,12 @@
           <span id="tradingCapitalValue" class="settings-value">2 USDT</span>
         </div>
 
-        <div class="settings-item">
+        <div class="settings-item" onclick="openWallexModal()" style="cursor:pointer;">
           <div>
             <strong>اتصال صرافی</strong>
-            <small>اتصال API برای معاملات واقعی</small>
+            <small>مدیریت اتصال API والکس</small>
           </div>
-          <span class="settings-value">متصل به Wallex</span>
+          <span id="wallexConnectionValue" class="settings-value">بررسی وضعیت</span>
         </div>
 
         <div class="settings-item">
@@ -834,6 +834,29 @@
           onclick="saveTradingCapital()"
           style="width:100%;margin-top:14px;"
         >ذخیره</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="wallexModal" class="withdraw-modal" style="display:none;">
+    <div class="withdraw-modal-content">
+      <div class="withdraw-modal-header">
+        <strong>اتصال حساب Wallex</strong>
+        <button type="button" onclick="closeWallexModal()">×</button>
+      </div>
+      <div style="padding:16px;">
+        <p id="wallexConnectionStatus">وضعیت اتصال در حال بررسی است...</p>
+        <input id="wallexApiKeyInput" type="password"
+          autocomplete="off" placeholder="کلید API والکس"
+          style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0;">
+        <button type="button" onclick="connectWallex()" style="width:100%;margin-top:10px;">
+          آزمایش و ذخیره کلید
+        </button>
+        <button type="button" onclick="disconnectWallex()"
+          style="width:100%;margin-top:10px;">
+          قطع اتصال و حذف کلید
+        </button>
       </div>
     </div>
   </div>

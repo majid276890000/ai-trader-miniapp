@@ -1486,6 +1486,98 @@ function closeTradingCapitalModal() {
   if (modal) modal.style.display = "none";
 }
 
+
+function openWallexModal() {
+  const modal = document.getElementById("wallexModal");
+  if (modal) modal.style.display = "flex";
+  loadWallexStatus();
+}
+
+function closeWallexModal() {
+  const modal = document.getElementById("wallexModal");
+  if (modal) modal.style.display = "none";
+}
+
+async function loadWallexStatus() {
+  const status = document.getElementById("wallexConnectionStatus");
+  const value = document.getElementById("wallexConnectionValue");
+
+  try {
+    const response = await fetch(API + "/wallex/status", {
+      headers: getTelegramAuthHeaders()
+    });
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) throw new Error(data.message || "خطا");
+
+    const connected = data.connected === true;
+    if (status) status.textContent = connected
+      ? "حساب Wallex متصل و تأیید شده است."
+      : "حساب Wallex متصل نیست.";
+    if (value) value.textContent = connected ? "متصل" : "اتصال برقرار نیست";
+  } catch (error) {
+    if (status) status.textContent = "دریافت وضعیت اتصال ناموفق بود.";
+    if (value) value.textContent = "نامشخص";
+  }
+}
+
+async function connectWallex() {
+  const input = document.getElementById("wallexApiKeyInput");
+  const status = document.getElementById("wallexConnectionStatus");
+  const apiKey = input?.value.trim();
+
+  if (!apiKey) {
+    if (status) status.textContent = "ابتدا کلید API را وارد کن.";
+    return;
+  }
+
+  if (status) status.textContent = "در حال آزمایش کلید با والکس...";
+
+  try {
+    const response = await fetch(API + "/wallex/connect", {
+      method: "POST",
+      headers: {
+        ...getTelegramAuthHeaders(),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({apiKey})
+    });
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.message || "اتصال ناموفق بود.");
+    }
+
+    input.value = "";
+    if (status) status.textContent = "کلید تأیید و به‌صورت رمزنگاری‌شده ذخیره شد.";
+    await loadWallexStatus();
+  } catch (error) {
+    if (status) status.textContent = error.message || "خطا در اتصال به والکس.";
+  }
+}
+
+async function disconnectWallex() {
+  const status = document.getElementById("wallexConnectionStatus");
+  if (!confirm("اتصال Wallex قطع و کلید ذخیره‌شده حذف شود؟")) return;
+
+  try {
+    const response = await fetch(API + "/wallex/disconnect", {
+      method: "POST",
+      headers: getTelegramAuthHeaders()
+    });
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) throw new Error(data.message || "خطا");
+
+    const input = document.getElementById("wallexApiKeyInput");
+    if (input) input.value = "";
+    if (status) status.textContent = "اتصال قطع شد و کلید حذف شد.";
+    await loadWallexStatus();
+  } catch (error) {
+    if (status) status.textContent = "قطع اتصال ناموفق بود.";
+  }
+}
+
 async function loadTradingCapital() {
   try {
     const res = await fetch(API + "/trading-capital", {

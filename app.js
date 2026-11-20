@@ -2087,6 +2087,11 @@ async function loadAdminTronPanel() {
 
     const data = await res.json();
 
+    const adminDebug = document.createElement("div");
+    adminDebug.style.cssText = "position:fixed;top:55px;left:10px;z-index:999999;background:#111;color:#0f0;padding:12px;direction:ltr;font-size:13px;max-width:90%;word-break:break-word";
+    adminDebug.textContent = "ADMIN API: HTTP " + res.status + " | " + JSON.stringify(data);
+    document.body.appendChild(adminDebug);
+
     console.log(
       "ADMIN TRON PENDING RESPONSE:",
       data

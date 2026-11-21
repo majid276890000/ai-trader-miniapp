@@ -847,6 +847,10 @@
       </div>
       <div style="padding:16px;">
         <p id="wallexConnectionStatus">وضعیت اتصال در حال بررسی است...</p>
+        <button type="button" onclick="loadWallexBalance()" style="width:100%;margin:10px 0;">
+          دریافت موجودی والکس
+        </button>
+        <pre id="wallexBalanceResult" style="white-space:pre-wrap;direction:rtl;text-align:right;padding:12px;background:rgba(128,128,128,.12);border-radius:8px;">هنوز موجودی دریافت نشده است.</pre>
         <input id="wallexApiKeyInput" type="password"
           autocomplete="off" placeholder="کلید API والکس"
           style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0;">

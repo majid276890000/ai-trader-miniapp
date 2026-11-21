@@ -1521,6 +1521,37 @@ async function loadWallexStatus() {
   }
 }
 
+async function loadWallexBalance() {
+  const box = document.getElementById("wallexBalanceResult");
+  if (box) box.textContent = "در حال دریافت موجودی...";
+
+  try {
+    const response = await fetch(API + "/wallex-user-balance", {
+      headers: getTelegramAuthHeaders()
+    });
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.message || data.error || "دریافت موجودی ناموفق بود.");
+    }
+
+    const b = data.balance || {};
+    const fmt = value => Number(value || 0).toLocaleString("en-US", {
+      maximumFractionDigits: 8
+    });
+
+    if (box) {
+      box.textContent =
+        "USDT آزاد: " + fmt(b.usdtValue) +
+        " | USDT قفل‌شده: " + fmt(b.usdtLocked) +
+        "\nBTC آزاد: " + fmt(b.btcValue) +
+        " | BTC قفل‌شده: " + fmt(b.btcLocked);
+    }
+  } catch (error) {
+    if (box) box.textContent = error.message || "خطا در دریافت موجودی.";
+  }
+}
+
 async function connectWallex() {
   const input = document.getElementById("wallexApiKeyInput");
   const status = document.getElementById("wallexConnectionStatus");

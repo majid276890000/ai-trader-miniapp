@@ -187,9 +187,41 @@ async function getAnalysis() {
         : "-"
     );
 
+    const riskLabels = {
+      LOW: "کم",
+      MEDIUM: "متوسط",
+      HIGH: "زیاد"
+    };
+
+    const trendLabels = {
+      UP: "صعودی",
+      DOWN: "نزولی",
+      NEUTRAL: "خنثی"
+    };
+
+    setText("risk", riskLabels[data.risk] || data.risk || "-");
+    setText("trend", trendLabels[data.trend] || data.trend || "-");
+
     setText(
-      "risk",
-      data.risk || "LOW"
+      "rsi",
+      data.rsi != null ? Number(data.rsi).toFixed(1) : "-"
+    );
+
+    setText(
+      "sma20",
+      data.sma20 != null ? Number(data.sma20).toFixed(2) + " USDT" : "-"
+    );
+
+    setText(
+      "sma50",
+      data.sma50 != null ? Number(data.sma50).toFixed(2) + " USDT" : "-"
+    );
+
+    setText(
+      "volumeRatio",
+      data.volumeRatio != null
+        ? Number(data.volumeRatio).toFixed(2) + "x میانگین"
+        : "-"
     );
 
     if (data.price) {

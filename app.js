@@ -156,7 +156,9 @@ async function getAnalysis() {
   try {
 
     const res =
-      await fetch(API + "/analysis");
+      await fetch(API + "/analysis", {
+        headers: getTelegramAuthHeaders()
+      });
 
     const data =
       await res.json();
@@ -167,9 +169,15 @@ async function getAnalysis() {
       );
     }
 
+    const signalLabels = {
+      CHECK_BUY: "فرصت خرید",
+      CHECK_SELL: "فرصت فروش",
+      WAIT: "در انتظار"
+    };
+
     setText(
       "signal",
-      data.signal || "WAIT"
+      signalLabels[data.signal] || data.signal || "در انتظار"
     );
 
     setText(

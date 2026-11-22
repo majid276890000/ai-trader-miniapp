@@ -54,45 +54,25 @@ function setText(id, value) {
 // =========================
 async function getStatus() {
   try {
-    const res = await fetch(API + "/status");
+    const res = await fetch(API + "/status", {
+      headers: getTelegramAuthHeaders()
+    });
     const data = await res.json();
 
-    setText(
-      "status",
-      data.bot === "active"
-        ? "🟢 فعال"
-        : "⚪ متوقف"
-    );
+    if (!res.ok || !data.ok) {
+      throw new Error(data.message || "Status request failed");
+    }
 
-    setText(
-      "balance",
-      Number(data.balance ?? 0).toFixed(2) +
-      " USDT"
-    );
-
-    setText(
-      "signal",
-      data.bot === "active"
-        ? "معامله‌گر فعال است"
-        : "معامله‌گر متوقف است"
-    );
+    setText("status", data.bot === "active" ? "🟢 فعال" : "⚪ متوقف");
+    setText("balance", Number(data.balance ?? 0).toFixed(2) + " USDT");
+    setText("signal", data.bot === "active"
+      ? "ربات فعال است؛ وضعیت معامله خودکار مستقل است"
+      : "ربات متوقف است؛ تحلیل بازار قابل استفاده است");
 
   } catch (error) {
-
-    setText(
-      "status",
-      "🔴 اتصال برقرار نیست"
-    );
-
-    setText(
-      "signal",
-      "Backend در دسترس نیست"
-    );
-
-    console.error(
-      "Status Error:",
-      error
-    );
+    setText("status", "🔴 اتصال برقرار نیست");
+    setText("signal", "Backend در دسترس نیست");
+    console.error("Status Error:", error);
   }
 }
 
@@ -100,40 +80,20 @@ async function getStatus() {
 // Start Bot
 // =========================
 async function startBot() {
+  const button = document.querySelector(".start-btn");
+  if (button) button.disabled = true;
   try {
-
-    const res =
-      await fetch(API + "/start", { headers: getTelegramAuthHeaders() });
-
-    console.log("WALLET RESPONSE", res.status, res.ok);
-
-    const data =
-      await res.json();
-
-    setText(
-      "status",
-      "🟢 فعال"
-    );
-
-    setText(
-      "signal",
-      data.message ||
-      "ربات شروع شد"
-    );
-
+    const res = await fetch(API + "/start", {
+      headers: getTelegramAuthHeaders()
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.message || "Start failed");
     await getStatus();
-
   } catch (error) {
-
-    setText(
-      "signal",
-      "❌ اتصال به Backend برقرار نیست"
-    );
-
-    console.error(
-      "Start Error:",
-      error
-    );
+    setText("signal", "❌ شروع ربات ناموفق بود: " + error.message);
+    console.error("Start Error:", error);
+  } finally {
+    if (button) button.disabled = false;
   }
 }
 
@@ -141,38 +101,20 @@ async function startBot() {
 // Stop Bot
 // =========================
 async function stopBot() {
+  const button = document.querySelector(".stop-btn");
+  if (button) button.disabled = true;
   try {
-
-    const res =
-      await fetch(API + "/stop", { headers: getTelegramAuthHeaders() });
-
-    const data =
-      await res.json();
-
-    setText(
-      "status",
-      "⚪ متوقف"
-    );
-
-    setText(
-      "signal",
-      data.message ||
-      "ربات متوقف شد"
-    );
-
+    const res = await fetch(API + "/stop", {
+      headers: getTelegramAuthHeaders()
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.message || "Stop failed");
     await getStatus();
-
   } catch (error) {
-
-    setText(
-      "signal",
-      "❌ اتصال به Backend برقرار نیست"
-    );
-
-    console.error(
-      "Stop Error:",
-      error
-    );
+    setText("signal", "❌ توقف ربات ناموفق بود: " + error.message);
+    console.error("Stop Error:", error);
+  } finally {
+    if (button) button.disabled = false;
   }
 }
 

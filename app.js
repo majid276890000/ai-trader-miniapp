@@ -2176,6 +2176,13 @@ async function loadAdminTronPanel() {
     return;
   }
 
+  const btn = document.getElementById("adminPanelToggleBtn");
+  if (btn) {
+    btn.style.display = "block";
+    btn.textContent = "در حال بررسی دسترسی مدیر...";
+  }
+
+
   try {
 
     const res = await fetch(
@@ -2196,13 +2203,14 @@ async function loadAdminTronPanel() {
     if (!data.ok) {
       adminPanelAuthorized = false;
       panel.style.display = "none";
-      const btn = document.getElementById("adminPanelToggleBtn");
-      if (btn) btn.style.display = "none";
+      if (btn) {
+        btn.style.display = "block";
+        btn.textContent = "مدیر: HTTP " + res.status + " | " + (data.message || "دسترسی رد شد");
+      }
       return;
     }
 
     adminPanelAuthorized = true;
-    const btn = document.getElementById("adminPanelToggleBtn");
     if (btn) {
       btn.style.display = "block";
       btn.textContent = "ورود مدیر";
@@ -2300,10 +2308,9 @@ async function loadAdminTronPanel() {
     );
 
     panel.style.display = "none";
-    const btn = document.getElementById("adminPanelToggleBtn");
-    if (btn && adminPanelAuthorized) {
+    if (btn) {
       btn.style.display = "block";
-      btn.textContent = "ورود مدیر";
+      btn.textContent = "خطای مدیر: " + (error.message || "خطای ارتباط");
     }
   }
 }

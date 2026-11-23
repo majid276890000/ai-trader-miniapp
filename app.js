@@ -2187,11 +2187,11 @@ async function loadAdminTronPanel() {
 
     const data = await res.json();
 
-
-    console.log(
-      "ADMIN TRON PENDING RESPONSE:",
-      data
-    );
+    statusEl.textContent =
+      "HTTP " + res.status +
+      " | ok: " + data.ok +
+      " | count: " + data.count +
+      " | message: " + (data.message || "بدون خطا");
 
     if (!data.ok) {
       adminPanelAuthorized = false;

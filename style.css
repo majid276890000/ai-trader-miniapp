@@ -1439,3 +1439,113 @@ footer small {
   border-color: #35e0d0;
   box-shadow: 0 0 0 3px rgba(53, 224, 208, .12);
 }
+
+/* ===== LANGUAGE CARDS ===== */
+.page-settings .language-settings-item {
+  display: block;
+  width: 100%;
+}
+
+.page-settings .language-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+
+.page-settings .language-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.page-settings .language-option {
+  appearance: none;
+  width: 100%;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border: 1px solid rgba(130, 160, 180, .2);
+  border-radius: 13px;
+  background: rgba(18, 35, 53, .85);
+  color: #e7f2f7;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.page-settings .language-option.active {
+  border: 1px solid #25d6bd;
+  background: linear-gradient(135deg, rgba(20, 105, 105, .35), rgba(18, 35, 53, .95));
+  box-shadow: 0 0 12px rgba(37, 214, 189, .12);
+}
+
+.page-settings .language-check {
+  margin-inline-start: auto;
+  color: #25d6bd;
+  opacity: 0;
+  font-weight: bold;
+}
+
+.page-settings .language-option.active .language-check {
+  opacity: 1;
+}
+
+/* ===== TRADING CAPITAL MODAL ===== */
+#tradingCapitalModal .withdraw-modal-content {
+  width: min(100%, 440px);
+  max-width: 440px;
+  border: 1px solid rgba(37, 214, 189, .28);
+  border-radius: 20px 20px 14px 14px;
+  background: linear-gradient(160deg, #14283a, #091522);
+  color: #edf7fa;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .48);
+  overflow: hidden;
+}
+
+#tradingCapitalModal .withdraw-modal-header {
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  color: #25d6bd;
+}
+
+#tradingCapitalModal .withdraw-modal-header button {
+  color: #eaf5f7;
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 10px;
+}
+
+#tradingCapitalModal .withdraw-modal-content p {
+  color: #d5e5eb;
+  line-height: 1.8;
+}
+
+#tradingCapitalInput {
+  border: 1px solid rgba(37, 214, 189, .3);
+  border-radius: 12px;
+  background: #0b1b29;
+  color: #fff;
+  outline: none;
+}
+
+#tradingCapitalInput:focus {
+  border-color: #25d6bd;
+  box-shadow: 0 0 0 3px rgba(37, 214, 189, .12);
+}
+
+#tradingCapitalModal .withdraw-modal-content small {
+  color: #9bb2bf;
+}
+
+#tradingCapitalModal .withdraw-modal-content > div:last-child > button {
+  min-height: 46px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(110deg, #12a995, #25d6bd);
+  color: #06211f;
+  font-weight: 700;
+}

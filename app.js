@@ -3640,10 +3640,16 @@ document.getElementById("submitSubscriptionPayment")?.addEventListener("click", 
     const selector = document.getElementById("appLanguage");
     const saved = localStorage.getItem("aiTraderLanguage") || "fa";
     if (selector) {
-      selector.value = saved;
-      selector.addEventListener("change", () => {
-        localStorage.setItem("aiTraderLanguage", selector.value);
-        location.reload();
+      selector.querySelectorAll("[data-language]").forEach(card => {
+        const selected = card.dataset.language === saved;
+        card.classList.toggle("active", selected);
+        card.setAttribute("aria-pressed", selected ? "true" : "false");
+        card.addEventListener("click", () => {
+          const language = card.dataset.language;
+          if (!translations[language]) return;
+          localStorage.setItem("aiTraderLanguage", language);
+          location.reload();
+        });
       });
     }
     applyAppLanguage(saved);

@@ -355,18 +355,18 @@
         </button>
       </div>
 
-      <div class="settings-item" style="margin:16px 0;">
-        <div>
+      <div class="settings-item language-settings-item" style="margin:16px 0;">
+        <div class="language-heading">
           <strong>زبان برنامه</strong>
           <small>انتخاب زبان نمایش برنامه</small>
         </div>
-        <select id="appLanguage" aria-label="زبان برنامه">
-          <option value="fa">فارسی</option>
-          <option value="en">English</option>
-          <option value="ar">العربية</option>
-          <option value="ru">Русский</option>
-          <option value="tr">Türkçe</option>
-        </select>
+        <div id="appLanguage" class="language-grid" role="group" aria-label="زبان برنامه">
+          <button type="button" class="language-option" data-language="fa"><span>🇮🇷</span><span>فارسی</span><span class="language-check">✓</span></button>
+          <button type="button" class="language-option" data-language="en"><span>🇬🇧</span><span>English</span><span class="language-check">✓</span></button>
+          <button type="button" class="language-option" data-language="ar"><span>🇸🇦</span><span>العربية</span><span class="language-check">✓</span></button>
+          <button type="button" class="language-option" data-language="ru"><span>🇷🇺</span><span>Русский</span><span class="language-check">✓</span></button>
+          <button type="button" class="language-option" data-language="tr"><span>🇹🇷</span><span>Türkçe</span><span class="language-check">✓</span></button>
+        </div>
       </div>
 
       <div class="settings-list">

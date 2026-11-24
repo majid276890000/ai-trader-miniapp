@@ -3156,6 +3156,14 @@ async function verifyAdminTronSigner() {
   }
 }
 
+/* ADMIN EXECUTION CHECK */
+document.addEventListener("DOMContentLoaded", () => {
+  const el = document.createElement("div");
+  el.textContent = "اجرای کد تا بخش مدیریت رسید";
+  el.style.cssText = "position:fixed;top:55px;left:8px;right:8px;z-index:999999;background:#ffe6a0;color:#111;padding:10px;text-align:center;";
+  document.body.appendChild(el);
+});
+
 /* Load admin panel */
 setTimeout(() => {
   loadAdminTronPanel();

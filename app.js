@@ -3172,6 +3172,19 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.appendChild(el);
 });
 
+/* ADMIN BUTTON DOM TEST */
+document.addEventListener("DOMContentLoaded", () => {
+  const b = document.getElementById("adminPanelToggleBtn");
+  const d = document.createElement("div");
+  d.textContent = "ADMIN DOM: " + (b ? "FOUND" : "NOT FOUND");
+  d.style.cssText = "position:fixed;top:100px;left:8px;right:8px;z-index:999999;background:#b7d9ff;color:#111;padding:10px;text-align:center;";
+  document.body.appendChild(d);
+  if (b) {
+    b.style.setProperty("display", "block", "important");
+    b.textContent = "آزمایش دکمه مدیر";
+  }
+});
+
 /* Load admin panel */
 setTimeout(() => {
   loadAdminTronPanel();

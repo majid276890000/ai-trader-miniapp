@@ -1056,3 +1056,133 @@ footer small {
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
+
+/* PREMIUM ADMIN DASHBOARD */
+#adminTronPanel {
+  margin-top: 20px !important;
+  padding: 18px !important;
+  border: 1px solid rgba(0,217,255,.35);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(0,217,255,.12), transparent 38%),
+    linear-gradient(145deg,#101e2c,#060d15);
+  box-shadow: 0 15px 40px rgba(0,0,0,.45), 0 0 20px rgba(0,217,255,.06);
+}
+
+#adminTronPanel .section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0,217,255,.18);
+}
+
+#adminTronPanel .eyebrow {
+  margin-bottom: 7px;
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+#adminTronPanel h2 {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+#adminTronPanel #adminTronStatus,
+#adminTronPanel #adminWithdrawStatus,
+#adminTronPanel #adminSubscriptionStatus {
+  padding: 12px;
+  border: 1px solid rgba(0,255,153,.18);
+  border-radius: 13px;
+  background: rgba(0,255,153,.055);
+  color: #b9ffe1;
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+#adminTronPanel .card {
+  margin-top: 12px;
+  padding: 15px;
+  border: 1px solid rgba(0,217,255,.16);
+  border-radius: 17px;
+  background: linear-gradient(145deg,rgba(20,35,49,.98),rgba(7,14,22,.98));
+  box-shadow: 0 8px 22px rgba(0,0,0,.25);
+}
+
+#adminTronPanel .card strong {
+  color: #65e8ff;
+  font-size: 14px;
+}
+
+#adminTronPanel button:not(#adminPanelToggleBtn) {
+  min-height: 42px;
+  padding: 10px 15px;
+  border: 1px solid rgba(0,217,255,.25);
+  border-radius: 12px;
+  color: #eafaff;
+  background: linear-gradient(135deg,#12364a,#102535);
+  font-size: 12px;
+  font-weight: 800;
+  transition: .2s;
+}
+
+#adminTronPanel button:active {
+  transform: scale(.97);
+}
+
+#adminTronPanel #adminTronPendingList .card button:first-child,
+#adminTronPanel #adminSubscriptionList .card button:first-of-type {
+  color: #04150e;
+  background: linear-gradient(135deg,#00ff99,#00c98b);
+  border: 0;
+}
+
+#adminTronPanel #adminTronPendingList .card button:last-child,
+#adminTronPanel #adminSubscriptionList .card button:last-of-type,
+#adminTronPanel #adminWithdrawProcessingList .card button {
+  color: #fff;
+  background: linear-gradient(135deg,#a91e3c,#ed3659);
+  border: 0;
+}
+
+#adminTronPanel #adminWithdrawPendingList .card button {
+  color: #04150e;
+  background: linear-gradient(135deg,#00ff99,#00c98b);
+  border: 0;
+}
+
+#adminTronPanel #adminWithdrawPendingList,
+#adminTronPanel #adminWithdrawProcessingList,
+#adminTronPanel #adminWithdrawFiatList,
+#adminTronPanel #adminSubscriptionList {
+  margin-top: 16px;
+}
+
+#adminTronPanel [style*="direction:ltr"] {
+  padding: 10px;
+  border: 1px solid rgba(0,217,255,.12);
+  border-radius: 10px;
+  background: rgba(0,0,0,.25);
+  color: #75eaff;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+@media (max-width: 380px) {
+  #adminTronPanel {
+    padding: 13px !important;
+  }
+
+  #adminTronPanel .card {
+    padding: 12px;
+  }
+
+  #adminTronPanel button:not(#adminPanelToggleBtn) {
+    font-size: 11px;
+    padding: 9px;
+  }
+}

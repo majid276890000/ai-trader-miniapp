@@ -1186,3 +1186,154 @@ footer small {
     padding: 9px;
   }
 }
+
+/* PREMIUM SETTINGS PAGE */
+.page-settings.settings-card {
+  padding: 18px;
+  border: 1px solid rgba(0,217,255,.28);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 90% 0%,rgba(0,217,255,.10),transparent 38%),
+    linear-gradient(145deg,#101e2c,#060d15);
+  box-shadow: 0 15px 40px rgba(0,0,0,.35);
+}
+
+.page-settings .section-heading {
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0,217,255,.18);
+}
+
+.page-settings .eyebrow {
+  color: var(--blue);
+}
+
+.page-settings .settings-icon {
+  color: var(--blue);
+  border-color: rgba(0,217,255,.3);
+  background: rgba(0,217,255,.08);
+  border-radius: 14px;
+}
+
+.page-settings .settings-list {
+  gap: 11px;
+  margin-top: 15px;
+}
+
+.page-settings .settings-item {
+  min-height: 66px;
+  padding: 14px;
+  border: 1px solid rgba(0,217,255,.15);
+  border-radius: 16px;
+  background: linear-gradient(145deg,rgba(20,35,49,.95),rgba(7,14,22,.95));
+  transition: border-color .2s,background .2s;
+}
+
+.page-settings .settings-item[onclick] {
+  cursor: pointer;
+}
+
+.page-settings .settings-item[onclick]:active {
+  border-color: rgba(0,217,255,.55);
+  background: rgba(0,217,255,.08);
+}
+
+.page-settings .settings-item strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.page-settings .settings-item small {
+  font-size: 10px;
+  line-height: 1.8;
+}
+
+.page-settings .settings-value {
+  padding: 7px 10px;
+  border: 1px solid rgba(0,217,255,.2);
+  border-radius: 10px;
+  color: #65e8ff;
+  background: rgba(0,217,255,.07);
+  font-size: 11px;
+}
+
+.page-settings #appLanguage {
+  max-width: 125px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid rgba(0,217,255,.28);
+  border-radius: 11px;
+  color: #eafaff;
+  background: #102535;
+  font-size: 12px;
+}
+
+.page-settings .subscription-card {
+  margin: 18px 0 !important;
+  padding: 17px !important;
+  border: 1px solid rgba(0,217,255,.25);
+  border-radius: 19px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(0,217,255,.09),transparent 40%),
+    linear-gradient(145deg,#142638,#08121d);
+  box-shadow: 0 9px 24px rgba(0,0,0,.25);
+}
+
+.page-settings .subscription-card h3 {
+  color: #65e8ff;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.page-settings .subscription-card p,
+.page-settings .subscription-card label {
+  color: #c2d3df;
+  font-size: 11px;
+  line-height: 2;
+}
+
+.page-settings #subscriptionTreasuryAddress {
+  margin: 10px 0;
+  padding: 11px;
+  overflow-wrap: anywhere;
+  border: 1px solid rgba(0,217,255,.2);
+  border-radius: 11px;
+  color: #75eaff;
+  background: rgba(0,0,0,.25);
+  font-size: 11px;
+}
+
+.page-settings .subscription-card input {
+  box-sizing: border-box;
+  min-height: 43px;
+  padding: 11px;
+  border: 1px solid rgba(0,217,255,.22);
+  border-radius: 11px;
+  color: #fff;
+  background: rgba(0,0,0,.3);
+}
+
+.page-settings .subscription-card button {
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid rgba(0,217,255,.25);
+  border-radius: 11px;
+  color: #eafaff;
+  background: linear-gradient(135deg,#12364a,#102535);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+@media (max-width:380px) {
+  .page-settings.settings-card {
+    padding: 13px;
+  }
+
+  .page-settings .settings-item {
+    padding: 11px;
+  }
+
+  .page-settings .settings-value {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+}

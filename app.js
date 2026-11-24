@@ -1,12 +1,6 @@
 // =========================
 // Telegram WebApp
 
-const debugMarker = document.createElement("div");
-debugMarker.textContent = "آزمایش اجرای app.js موفق بود";
-debugMarker.style.cssText = "position:fixed;top:8px;left:8px;right:8px;z-index:999999;background:#b7f7c5;color:#111;padding:10px;text-align:center;border-radius:8px;";
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.appendChild(debugMarker);
-});
 // =========================
 
 const tg = window.Telegram?.WebApp;
@@ -3164,27 +3158,10 @@ async function verifyAdminTronSigner() {
   }
 }
 
-/* ADMIN EXECUTION CHECK */
+/* Keep admin button outside hidden containers */
 document.addEventListener("DOMContentLoaded", () => {
-  const el = document.createElement("div");
-  el.textContent = "اجرای کد تا بخش مدیریت رسید";
-  el.style.cssText = "position:fixed;top:55px;left:8px;right:8px;z-index:999999;background:#ffe6a0;color:#111;padding:10px;text-align:center;";
-  document.body.appendChild(el);
-});
-
-/* ADMIN BUTTON DOM TEST */
-document.addEventListener("DOMContentLoaded", () => {
-  const b = document.getElementById("adminPanelToggleBtn");
-  const d = document.createElement("div");
-  d.textContent = "ADMIN DOM: " + (b ? "FOUND" : "NOT FOUND");
-  d.style.cssText = "position:fixed;top:100px;left:8px;right:8px;z-index:999999;background:#b7d9ff;color:#111;padding:10px;text-align:center;";
-  document.body.appendChild(d);
-  if (b) {
-    document.body.appendChild(b);
-    b.textContent = "آزمایش دکمه مدیر";
-    b.style.cssText = "display:block!important;position:fixed!important;top:150px!important;left:8px!important;right:8px!important;width:calc(100% - 16px)!important;z-index:2147483647!important;visibility:visible!important;opacity:1!important;background:#ffcc00!important;color:#111!important;padding:16px!important;border:2px solid #111!important;";
-
-  }
+  const btn = document.getElementById("adminPanelToggleBtn");
+  if (btn) document.body.appendChild(btn);
 });
 
 /* Load admin panel */

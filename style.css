@@ -1549,3 +1549,182 @@ footer small {
   color: #06211f;
   font-weight: 700;
 }
+
+/* ===== PREMIUM HOME DASHBOARD ===== */
+
+/* BALANCE */
+.balance-card.page-home {
+  border-color: rgba(37, 214, 189, .35);
+  background:
+    radial-gradient(circle at 85% 10%, rgba(37, 214, 189, .15), transparent 42%),
+    linear-gradient(145deg, #142b3b, #081522);
+}
+
+.balance-card .card-label {
+  color: #9db8c5;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.balance-card .balance {
+  margin: 12px 0 8px;
+  color: #35e2c5;
+  font-size: clamp(30px, 8vw, 38px);
+  font-weight: 900;
+  text-align: center;
+  direction: ltr;
+  text-shadow: 0 0 22px rgba(37, 214, 189, .25);
+}
+
+.balance-card .wallet-toman-value {
+  margin: 8px 0 18px;
+  color: #9bb5c3;
+  font-size: 12px;
+  text-align: center;
+}
+
+.balance-card .wallet-details {
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.balance-card .wallet-detail {
+  border-color: rgba(37, 214, 189, .16);
+  background: rgba(5, 18, 29, .65);
+}
+
+.balance-card .wallet-detail strong {
+  color: #35e2c5;
+  font-size: 15px;
+}
+
+/* AI SIGNAL */
+.signal-card.page-home {
+  border-color: rgba(0, 217, 255, .28);
+  background:
+    radial-gradient(circle at 90% 0%, rgba(0, 217, 255, .10), transparent 40%),
+    linear-gradient(145deg, #102637, #081522);
+}
+
+.signal-card .section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.signal-card .eyebrow {
+  margin-bottom: 6px;
+  color: #35c9e8;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  font-weight: 700;
+}
+
+.signal-card .section-heading h2 {
+  margin: 0;
+}
+
+.signal-card .signal-badge {
+  padding: 6px 11px;
+  border: 1px solid rgba(37, 214, 189, .3);
+  border-radius: 20px;
+  background: rgba(37, 214, 189, .10);
+  color: #35e2c5;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.signal-card .main-signal {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 1px solid rgba(0, 217, 255, .18);
+  border-radius: 13px;
+  background: rgba(3, 15, 26, .65);
+  color: #35d9f2;
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.signal-card .analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.signal-card .analysis-item {
+  min-width: 0;
+  padding: 12px 10px;
+  border: 1px solid rgba(120, 190, 210, .13);
+  border-radius: 12px;
+  background: rgba(5, 18, 29, .62);
+}
+
+.signal-card .analysis-item span {
+  display: block;
+  margin-bottom: 7px;
+  color: #91aab8;
+  font-size: 11px;
+}
+
+.signal-card .analysis-item strong {
+  color: #e5f7fb;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+/* BOT STATUS */
+.status-card.page-home {
+  border-color: rgba(37, 214, 189, .25);
+  background:
+    radial-gradient(circle at 10% 100%, rgba(37, 214, 189, .08), transparent 45%),
+    linear-gradient(145deg, #14283a, #091522);
+}
+
+.status-card .section-title {
+  margin-bottom: 13px;
+  color: #dcecf2;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.status-card #status {
+  margin-bottom: 14px;
+  padding: 13px;
+  border: 1px solid rgba(37, 214, 189, .18);
+  border-radius: 12px;
+  background: rgba(5, 18, 29, .65);
+  color: #35e2c5;
+  font-size: 15px;
+  text-align: center;
+}
+
+.status-card .buttons {
+  gap: 10px;
+  margin-top: 0;
+}
+
+.status-card .buttons button {
+  min-height: 48px;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.status-card .buttons .start-btn {
+  color: #05231e;
+  background: linear-gradient(135deg, #16b99f, #35e2c5);
+  box-shadow: 0 5px 18px rgba(37, 214, 189, .16);
+}
+
+.status-card .buttons .stop-btn {
+  color: #fff;
+  background: linear-gradient(135deg, #e84b64, #a91e3b);
+  box-shadow: 0 5px 18px rgba(232, 75, 100, .15);
+}

@@ -2179,14 +2179,22 @@ async function loadAdminTronPanel() {
   const listEl =
     document.getElementById("adminTronPendingList");
 
-  if (!panel || !statusEl || !listEl) {
-    return;
-  }
-
   const btn = document.getElementById("adminPanelToggleBtn");
+
   if (btn) {
     btn.style.display = "block";
     btn.textContent = "در حال بررسی دسترسی مدیر...";
+  }
+
+  if (!panel || !statusEl || !listEl) {
+    if (btn) {
+      btn.textContent =
+        "خطای پنل: " +
+        (!panel ? "adminTronPanel " : "") +
+        (!statusEl ? "adminTronStatus " : "") +
+        (!listEl ? "adminTronPendingList" : "");
+    }
+    return;
   }
 
 

@@ -1773,3 +1773,38 @@ footer small {
   background: linear-gradient(135deg, #e84b64, #a91e3b);
   box-shadow: 0 5px 18px rgba(232, 75, 100, .15);
 }
+
+/* SEPARATE AUTO TRADE CONTROLS */
+.auto-trade-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.auto-trade-actions .auto-trade-button {
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.auto-trade-actions .auto-start-button {
+  color: #03100b;
+  background: linear-gradient(135deg, #00ff99, #00c98f);
+}
+
+.auto-trade-actions .auto-stop-button {
+  color: #fff;
+  background: linear-gradient(135deg, #ff526f, #b91f42);
+  box-shadow: 0 5px 18px rgba(232, 75, 100, .15);
+}
+
+.auto-trade-actions .auto-trade-button:disabled {
+  opacity: .42;
+  cursor: not-allowed;
+  filter: saturate(.55);
+}

@@ -217,13 +217,25 @@
 
       </div>
 
-      <button
-        id="autoTradeButton"
-        class="auto-trade-button"
-        onclick="toggleAutoTrade()"
-      >
-        در حال بررسی...
-      </button>
+      <div class="auto-trade-actions">
+        <button
+          id="autoTradeButton"
+          class="auto-trade-button auto-start-button"
+          onclick="startAutoTrade()"
+          disabled
+        >
+          فعال‌سازی معامله خودکار
+        </button>
+
+        <button
+          id="autoTradeStopButton"
+          class="auto-trade-button auto-stop-button"
+          onclick="stopAutoTrade()"
+          disabled
+        >
+          توقف معامله خودکار
+        </button>
+      </div>
 
       <div class="auto-trade-stats">
         <div class="auto-trade-stat">

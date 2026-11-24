@@ -1993,155 +1993,86 @@ setTimeout(() => {
 // =========================
 // AUTO TRADE CONTROL
 // =========================
+let autoTradeRequestBusy = false;
+
 async function getAutoTradeStatus() {
+  const status = document.getElementById("autoTradeStatus");
+  const startButton = document.getElementById("autoTradeButton");
+  const stopButton = document.getElementById("autoTradeStopButton");
 
-  const status =
-    document.getElementById("autoTradeStatus");
-
-  const button =
-    document.getElementById("autoTradeButton");
-
-  if (!status || !button) return;
+  if (!status || !startButton || !stopButton) return;
 
   try {
+    const res = await fetch(API + "/auto-trade", {
+      headers: getTelegramAuthHeaders()
+    });
 
-    const res =
-      await fetch(
-        API + "/auto-trade",
-        {
-          headers:
-            getTelegramAuthHeaders()
-        }
-      );
-
-    const data =
-      await res.json();
+    const data = await res.json();
 
     if (!data.ok) {
-      status.textContent =
-        data.message ||
-        "دریافت وضعیت ناموفق بود";
-
-      button.textContent =
-        "خطا";
-
+      status.textContent = data.message || "دریافت وضعیت ناموفق بود";
+      startButton.disabled = true;
+      stopButton.disabled = true;
       return;
     }
 
     if (data.enabled) {
-
-      status.textContent =
-        "🟢 معامله خودکار فعال است";
-
-      button.textContent =
-        "⛔ خاموش کردن";
-
+      status.textContent = "🟢 معامله خودکار فعال است";
     } else {
-
-      status.textContent =
-        "⚪ معامله خودکار خاموش است";
-
-      button.textContent =
-        "🤖 روشن کردن";
+      status.textContent = "⚪ معامله خودکار خاموش است";
     }
 
+    startButton.disabled = autoTradeRequestBusy || !!data.enabled;
+    stopButton.disabled = autoTradeRequestBusy || !data.enabled;
+
   } catch (error) {
-
-    console.error(
-      "Auto Trade Status Error:",
-      error
-    );
-
-    status.textContent =
-      "خطا در اتصال به سرور";
-
-    button.textContent =
-      "تلاش دوباره";
+    console.error("Auto Trade Status Error:", error);
+    status.textContent = "خطا در اتصال به سرور";
+    startButton.disabled = true;
+    stopButton.disabled = true;
   }
 }
 
+async function setAutoTrade(action) {
+  if (autoTradeRequestBusy) return;
+  if (action !== "on" && action !== "off") return;
 
-async function toggleAutoTrade() {
+  const startButton = document.getElementById("autoTradeButton");
+  const stopButton = document.getElementById("autoTradeStopButton");
 
-  console.log("TOGGLE AUTO TRADE CLICKED");
+  if (!startButton || !stopButton) return;
 
-  const button =
-    document.getElementById("autoTradeButton");
-
-  if (!button) return;
-
-  button.disabled = true;
+  autoTradeRequestBusy = true;
+  startButton.disabled = true;
+  stopButton.disabled = true;
 
   try {
+    const res = await fetch(API + "/auto-trade?action=" + action, {
+      headers: getTelegramAuthHeaders()
+    });
 
-    const currentRes =
-      await fetch(
-        API + "/auto-trade",
-        {
-          headers:
-            getTelegramAuthHeaders()
-        }
-      );
-
-    const current =
-      await currentRes.json();
-
-    if (!current.ok) {
-      alert(
-        current.message ||
-        "دریافت وضعیت ناموفق بود"
-      );
-
-      return;
-    }
-
-    const action =
-      current.enabled
-        ? "off"
-        : "on";
-
-    const res =
-      await fetch(
-        API +
-        "/auto-trade?action=" +
-        action,
-        {
-          headers:
-            getTelegramAuthHeaders()
-        }
-      );
-
-    const data =
-      await res.json();
+    const data = await res.json();
 
     if (!data.ok) {
-      alert(
-        data.message ||
-        "تغییر وضعیت ناموفق بود"
-      );
-
-      return;
+      alert(data.message || "تغییر وضعیت ناموفق بود");
     }
 
-    await getAutoTradeStatus();
-
   } catch (error) {
-
-    console.error(
-      "Toggle Auto Trade Error:",
-      error
-    );
-
-    alert(
-      "خطا در اتصال به سرور"
-    );
-
+    console.error("Auto Trade Control Error:", error);
+    alert("خطا در اتصال به سرور");
   } finally {
-
-    button.disabled = false;
+    autoTradeRequestBusy = false;
+    await getAutoTradeStatus();
   }
 }
 
+async function startAutoTrade() {
+  await setAutoTrade("on");
+}
+
+async function stopAutoTrade() {
+  await setAutoTrade("off");
+}
 
 setTimeout(() => {
   getAutoTradeStatus();

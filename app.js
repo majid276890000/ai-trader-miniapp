@@ -1,5 +1,12 @@
 // =========================
 // Telegram WebApp
+
+const debugMarker = document.createElement("div");
+debugMarker.textContent = "آزمایش اجرای app.js موفق بود";
+debugMarker.style.cssText = "position:fixed;top:8px;left:8px;right:8px;z-index:999999;background:#b7f7c5;color:#111;padding:10px;text-align:center;border-radius:8px;";
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.appendChild(debugMarker);
+});
 // =========================
 
 const tg = window.Telegram?.WebApp;

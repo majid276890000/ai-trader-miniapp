@@ -1808,3 +1808,108 @@ footer small {
   cursor: not-allowed;
   filter: saturate(.55);
 }
+
+/* PREMIUM WALLET DESIGN */
+.wallet-card {
+  border: 1px solid rgba(0, 217, 255, .3);
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 90% 0%, rgba(0,217,255,.13), transparent 45%),
+    linear-gradient(145deg, #101d31, #09111f);
+  box-shadow: 0 12px 35px rgba(0,0,0,.28);
+  padding: 20px;
+}
+
+.wallet-card .section-title {
+  font-size: 21px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.chain-wallet-connection {
+  margin: 16px 0;
+  padding: 17px;
+  border: 1px solid rgba(0,217,255,.22);
+  border-radius: 18px;
+  background: rgba(0,217,255,.045);
+}
+
+.chain-wallet-connection h3 {
+  color: #54e6ff;
+  font-size: 15px;
+}
+
+.chain-wallet-row {
+  border-bottom-color: rgba(255,255,255,.09);
+}
+
+.chain-wallet-row strong {
+  color: #fff;
+  font-size: 15px;
+}
+
+.chain-wallet-row small {
+  color: #a8c6d8;
+  font-size: 11px;
+}
+
+.chain-wallet-row button {
+  border-radius: 12px;
+  background: linear-gradient(135deg,#00d9ff,#087eae);
+  color: #061522;
+  font-weight: 900;
+  padding: 11px 14px;
+}
+
+#tronUsdtBalance {
+  color: #50e5ff;
+  font-size: 15px;
+  font-weight: 800;
+  margin: 15px 0 8px;
+}
+
+#tronWalletStatus {
+  font-size: 12px;
+  color: #9fb8c9;
+  overflow-wrap: anywhere;
+}
+
+.wallet-actions {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 9px;
+  margin: 20px 0;
+}
+
+.wallet-actions button {
+  min-width: 0;
+  border: 1px solid rgba(0,217,255,.25);
+  border-radius: 14px;
+  padding: 13px 5px;
+  background: rgba(0,217,255,.09);
+  color: #66eaff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.wallet-actions button span {
+  display: block;
+  font-size: 21px;
+  margin-bottom: 5px;
+}
+
+.wallet-transactions {
+  padding-top: 8px;
+}
+
+.wallet-transaction {
+  border-color: rgba(0,217,255,.13);
+  border-radius: 14px;
+  background: rgba(255,255,255,.035);
+}
+
+@media(max-width:380px) {
+  .wallet-actions { gap: 6px; }
+  .wallet-actions button { font-size: 11px; }
+}

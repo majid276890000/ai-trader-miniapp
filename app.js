@@ -3770,6 +3770,7 @@ window.openSubscriptionSettings = function () {
   settings.querySelector(".language-settings-item").style.display = "none";
   settings.querySelector(".settings-list").style.display = "none";
   page.style.display = "block";
+  loadSubscriptionStatus();
 };
 
 window.closeSubscriptionSettings = function () {

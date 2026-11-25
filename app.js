@@ -3215,6 +3215,7 @@ async function connectTronWallet() {
 }
 
 // =========================
+
 // EVM wallet connection has been removed.
 // TRON connection is handled by wallet-connect module.
 // SUBSCRIPTION FRONTEND
@@ -3232,12 +3233,19 @@ async function loadSubscriptionStatus() {
     const data = await response.json();
     if (!response.ok || !data.ok) throw new Error("status failed");
 
+    const paymentForm = document.getElementById("subscriptionPaymentForm");
+    const permanent = data.permanent === true;
+
+    if (paymentForm) paymentForm.style.display = permanent ? "none" : "";
+
     if (addressEl) {
       addressEl.textContent = data.treasuryAddress || "آدرس مقصد تنظیم نشده است";
     }
 
     if (statusEl) {
-      statusEl.textContent = data.active
+      statusEl.textContent = permanent
+        ? "اشتراک دائمی فعال است."
+        : data.active
         ? `اشتراک فعال تا: ${new Date(data.expiresAt).toLocaleDateString("fa-IR")}`
         : data.latestPaymentStatus === "PENDING_ADMIN"
           ? "پرداخت شما در انتظار تأیید مدیر است."

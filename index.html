@@ -350,25 +350,6 @@
         <span class="settings-icon">⚙</span>
       </div>
 
-      <div class="card subscription-card" style="margin:16px 0;padding:16px;">
-        <h3>اشتراک AI-Trader</h3>
-        <p id="subscriptionPlanDescription">اشتراک ۹۰ روزه — ۱۵ USDT</p>
-        <div id="subscriptionStatus">در حال بررسی اشتراک...</div>
-        <div id="subscriptionPaymentForm">
-        <p>شبکه پرداخت: TRON (TRC20)</p>
-        <label>آدرس مقصد پرداخت ۱۵ تتر:</label>
-        <div id="subscriptionTreasuryAddress" dir="ltr">در حال دریافت آدرس...</div>
-        <button type="button" id="copySubscriptionAddress">کپی آدرس پرداخت</button>
-        <label for="subscriptionTxid">شناسه تراکنش TXID</label>
-        <input id="subscriptionTxid" type="text"
-          placeholder="TXID تراکنش را وارد کنید"
-          autocomplete="off" style="width:100%;margin:10px 0;">
-        <button type="button" id="submitSubscriptionPayment">
-          ثبت پرداخت اشتراک
-        </button>
-        </div>
-      </div>
-
       <div class="settings-item language-settings-item" style="margin:16px 0;">
         <div class="language-heading">
           <strong>زبان برنامه</strong>
@@ -385,7 +366,12 @@
 
       <div class="settings-list">
 
-        <div class="settings-item" onclick="openTradingModeModal()">
+      <div class="settings-item" onclick="openSubscriptionSettings()" style="cursor:pointer;">
+  <div><strong>مدیریت اشتراک</strong><small>مشاهده وضعیت و تمدید اشتراک</small></div>
+  <span class="settings-value">۱۵ USDT ←</span>
+</div>
+
+  <div class="settings-item" onclick="openTradingModeModal()">
           <div>
             <strong>حالت معامله</strong>
             <small>مدیریت نحوه اجرای معاملات ربات</small>
@@ -419,7 +405,33 @@
 
       </div>
 
-    </section>
+
+  <div id="subscriptionSettingsPage" style="display:none;">
+    <div class="section-heading">
+      <h2>مدیریت اشتراک</h2>
+      <button type="button" onclick="closeSubscriptionSettings()">بازگشت</button>
+    </div>
+  <div class="card subscription-card" style="margin:16px 0;padding:16px;">
+        <h3>اشتراک AI-Trader</h3>
+        <p id="subscriptionPlanDescription">اشتراک ۹۰ روزه — ۱۵ USDT</p>
+        <div id="subscriptionStatus">در حال بررسی اشتراک...</div>
+        <div id="subscriptionPaymentForm">
+        <p>شبکه پرداخت: TRON (TRC20)</p>
+        <label>آدرس مقصد پرداخت ۱۵ تتر:</label>
+        <div id="subscriptionTreasuryAddress" dir="ltr">در حال دریافت آدرس...</div>
+        <button type="button" id="copySubscriptionAddress">کپی آدرس پرداخت</button>
+        <label for="subscriptionTxid">شناسه تراکنش TXID</label>
+        <input id="subscriptionTxid" type="text"
+          placeholder="TXID تراکنش را وارد کنید"
+          autocomplete="off" style="width:100%;margin:10px 0;">
+        <button type="button" id="submitSubscriptionPayment">
+          ثبت پرداخت اشتراک
+        </button>
+        </div>
+      </div>
+  </div>
+
+</section>
 
 
     <!-- FOOTER -->

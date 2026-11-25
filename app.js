@@ -3106,6 +3106,15 @@ setTimeout(() => {
    ========================= */
 
 function showAppPage(page) {
+  const subscriptionPage = document.getElementById("subscriptionSettingsPage");
+  const settings = document.querySelector(".page-settings");
+  if (subscriptionPage && settings) {
+    subscriptionPage.style.display = "none";
+    settings.querySelector(".section-heading").style.display = "";
+    settings.querySelector(".language-settings-item").style.display = "";
+    settings.querySelector(".settings-list").style.display = "";
+  }
+
   const sections = document.querySelectorAll(".page-section");
 
   sections.forEach((section) => {
@@ -3751,3 +3760,24 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 // ===== END WITHDRAWAL SECURITY WARNING TRANSLATION =====
+
+
+window.openSubscriptionSettings = function () {
+  const settings = document.querySelector(".page-settings");
+  const page = document.getElementById("subscriptionSettingsPage");
+  if (!settings || !page) return;
+  settings.querySelector(".section-heading").style.display = "none";
+  settings.querySelector(".language-settings-item").style.display = "none";
+  settings.querySelector(".settings-list").style.display = "none";
+  page.style.display = "block";
+};
+
+window.closeSubscriptionSettings = function () {
+  const settings = document.querySelector(".page-settings");
+  const page = document.getElementById("subscriptionSettingsPage");
+  if (!settings || !page) return;
+  page.style.display = "none";
+  settings.querySelector(".section-heading").style.display = "";
+  settings.querySelector(".language-settings-item").style.display = "";
+  settings.querySelector(".settings-list").style.display = "";
+};

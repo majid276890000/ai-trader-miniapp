@@ -2106,6 +2106,13 @@ async function loadAdminTronPanel() {
 
   const btn = document.getElementById("adminPanelToggleBtn");
 
+  const telegramUser = getTelegramUser();
+  if (String(telegramUser?.id || "") !== "6369377608") {
+    if (btn) btn.style.display = "none";
+    if (panel) panel.style.display = "none";
+    return;
+  }
+
   if (btn) {
     btn.style.display = "block";
     btn.textContent = "در حال بررسی دسترسی مدیر...";

@@ -3235,7 +3235,11 @@ async function loadSubscriptionStatus() {
 
     const paymentForm = document.getElementById("subscriptionPaymentForm");
     const permanent = data.permanent === true;
+    const planDescription = document.getElementById("subscriptionPlanDescription");
 
+    if (planDescription && permanent) {
+      planDescription.textContent = "اشتراک دائمی بدون تاریخ انقضا";
+    }
     if (paymentForm) paymentForm.style.display = permanent ? "none" : "";
 
     if (addressEl) {
